@@ -140,6 +140,14 @@ export default function Home() {
               </div>
             </div>
           )}
+
+          <button
+            className="mt-5 w-full rounded-md bg-emerald-700 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
+            disabled={cartItems.length === 0}
+            type="button"
+          >
+            Checkout
+          </button>
         </section>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
