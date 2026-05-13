@@ -23,7 +23,7 @@ export function MenuItemCard({ item, onAddToCart }: MenuItemCardProps) {
           onClick={() => onAddToCart(item)}
           type="button"
         >
-          Add to Cart
+          加入購物車
         </button>
       </div>
     </article>
