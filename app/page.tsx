@@ -11,6 +11,10 @@ export default function Home() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+  const cartTotal = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0,
+  );
 
   function handleAddToCart(menuItem: (typeof menuItems)[number]) {
     setCartItems((currentItems) => {
@@ -58,6 +62,45 @@ export default function Home() {
             Cart ({cartCount})
           </div>
         </header>
+
+        <section className="rounded-lg border border-stone-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center justify-between gap-4">
+            <h2 className="text-xl font-semibold text-stone-950">
+              Cart Summary
+            </h2>
+            <p className="text-sm font-medium text-stone-500">
+              {cartCount} item{cartCount === 1 ? "" : "s"}
+            </p>
+          </div>
+
+          {cartItems.length === 0 ? (
+            <p className="mt-4 text-sm text-stone-600">Your cart is empty.</p>
+          ) : (
+            <div className="mt-5 flex flex-col gap-4">
+              <div className="flex flex-col gap-3">
+                {cartItems.map((item) => (
+                  <div
+                    className="grid gap-2 border-b border-stone-100 pb-3 text-sm last:border-b-0 last:pb-0 sm:grid-cols-[1fr_auto_auto_auto] sm:items-center"
+                    key={item.menuItemId}
+                  >
+                    <p className="font-medium text-stone-950">{item.name}</p>
+                    <p className="text-stone-600">Qty {item.quantity}</p>
+                    <p className="text-stone-600">NT${item.price}</p>
+                    <p className="font-semibold text-stone-950">
+                      NT${item.price * item.quantity}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div className="flex items-center justify-between border-t border-stone-200 pt-4">
+                <p className="text-sm font-medium text-stone-600">Total</p>
+                <p className="text-lg font-semibold text-emerald-700">
+                  NT${cartTotal}
+                </p>
+              </div>
+            </div>
+          )}
+        </section>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {availableMenuItems.map((item) => (
