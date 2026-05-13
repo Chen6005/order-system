@@ -3,11 +3,40 @@
 import { useState } from "react";
 
 import { menuItems } from "@/lib/mock-data";
+import type { CartItem } from "@/lib/types";
 
 const availableMenuItems = menuItems.filter((item) => item.available);
 
 export default function Home() {
-  const [cartCount, setCartCount] = useState(0);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+
+  const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+
+  function handleAddToCart(menuItem: (typeof menuItems)[number]) {
+    setCartItems((currentItems) => {
+      const existingItem = currentItems.find(
+        (item) => item.menuItemId === menuItem.id,
+      );
+
+      if (existingItem) {
+        return currentItems.map((item) =>
+          item.menuItemId === menuItem.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item,
+        );
+      }
+
+      return [
+        ...currentItems,
+        {
+          menuItemId: menuItem.id,
+          name: menuItem.name,
+          price: menuItem.price,
+          quantity: 1,
+        },
+      ];
+    });
+  }
 
   return (
     <main className="min-h-screen bg-stone-50 px-6 py-10 text-stone-950 sm:px-10 lg:px-16">
@@ -50,7 +79,7 @@ export default function Home() {
                 </p>
                 <button
                   className="rounded-md bg-emerald-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-800"
-                  onClick={() => setCartCount((count) => count + 1)}
+                  onClick={() => handleAddToCart(item)}
                   type="button"
                 >
                   Add to Cart
