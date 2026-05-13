@@ -5,12 +5,13 @@ import { useState } from "react";
 import { CartSummary } from "@/components/CartSummary";
 import { MenuItemCard } from "@/components/MenuItemCard";
 import { menuItems } from "@/lib/mock-data";
-import type { CartItem, MenuItem } from "@/lib/types";
+import type { CartItem, MenuItem, Order } from "@/lib/types";
 
 const availableMenuItems = menuItems.filter((item) => item.available);
 
 export default function Home() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [, setOrders] = useState<Order[]>([]);
   const [orderSubmitted, setOrderSubmitted] = useState(false);
 
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
@@ -75,6 +76,14 @@ export default function Home() {
       return;
     }
 
+    const newOrder: Order = {
+      id: Date.now().toString(),
+      items: cartItems,
+      status: "new",
+      createdAt: new Date().toISOString(),
+    };
+
+    setOrders((currentOrders) => [...currentOrders, newOrder]);
     setOrderSubmitted(true);
     setCartItems([]);
   }
