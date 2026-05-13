@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { createOrder, getOrders } from "@/lib/order-service";
+import { createOrder, subscribeToOrders } from "@/lib/order-service";
 import type { CartItem, MenuItem, Order, OrderStatus } from "@/lib/types";
 
 export function useOrderSystem() {
@@ -16,25 +16,11 @@ export function useOrderSystem() {
   );
 
   useEffect(() => {
-    let isActive = true;
+    const unsubscribe = subscribeToOrders(setOrders, (error) => {
+      console.error("Failed to subscribe to orders from Firestore.", error);
+    });
 
-    async function loadOrders() {
-      try {
-        const storedOrders = await getOrders();
-
-        if (isActive) {
-          setOrders(storedOrders);
-        }
-      } catch (error) {
-        console.error("Failed to load orders from Firestore.", error);
-      }
-    }
-
-    loadOrders();
-
-    return () => {
-      isActive = false;
-    };
+    return unsubscribe;
   }, []);
 
   function addToCart(menuItem: MenuItem) {

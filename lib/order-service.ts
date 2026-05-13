@@ -28,12 +28,19 @@ export async function getOrders(): Promise<Order[]> {
   return snapshot.docs.map((orderDoc) => orderDoc.data() as Order);
 }
 
-export function subscribeToOrders(callback: (orders: Order[]) => void) {
-  return onSnapshot(getOrdersQuery(), (snapshot) => {
-    const orders = snapshot.docs.map((orderDoc) => orderDoc.data() as Order);
+export function subscribeToOrders(
+  callback: (orders: Order[]) => void,
+  onError?: (error: Error) => void,
+) {
+  return onSnapshot(
+    getOrdersQuery(),
+    (snapshot) => {
+      const orders = snapshot.docs.map((orderDoc) => orderDoc.data() as Order);
 
-    callback(orders);
-  });
+      callback(orders);
+    },
+    onError,
+  );
 }
 
 export async function updateOrderStatus(
