@@ -2,6 +2,11 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    // MVP testing rule: allow temporary reads and writes for orders only.
+    match /orders/{orderId} {
+      allow read, write: if true;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }
