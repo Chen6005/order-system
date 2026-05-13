@@ -5,9 +5,16 @@ import { useState } from "react";
 import { CartSummary } from "@/components/CartSummary";
 import { MenuItemCard } from "@/components/MenuItemCard";
 import { menuItems } from "@/lib/mock-data";
-import type { CartItem, MenuItem, Order } from "@/lib/types";
+import type { CartItem, MenuItem, Order, OrderStatus } from "@/lib/types";
 
 const availableMenuItems = menuItems.filter((item) => item.available);
+const orderStatusOptions: OrderStatus[] = [
+  "new",
+  "preparing",
+  "ready",
+  "completed",
+  "cancelled",
+];
 
 export default function Home() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -88,6 +95,14 @@ export default function Home() {
     setCartItems([]);
   }
 
+  function updateOrderStatus(orderId: string, status: OrderStatus) {
+    setOrders((currentOrders) =>
+      currentOrders.map((order) =>
+        order.id === orderId ? { ...order, status } : order,
+      ),
+    );
+  }
+
   return (
     <main className="min-h-screen bg-stone-50 px-6 py-10 text-stone-950 sm:px-10 lg:px-16">
       <section className="mx-auto flex w-full max-w-5xl flex-col gap-10">
@@ -150,7 +165,25 @@ export default function Home() {
                   <p className="font-medium text-stone-950">
                     Order #{order.id}
                   </p>
-                  <p className="text-stone-600">Status: {order.status}</p>
+                  <label className="flex items-center gap-2 text-stone-600">
+                    <span>Status</span>
+                    <select
+                      className="rounded-md border border-stone-200 bg-white px-3 py-2 text-sm text-stone-950"
+                      onChange={(event) =>
+                        updateOrderStatus(
+                          order.id,
+                          event.target.value as OrderStatus,
+                        )
+                      }
+                      value={order.status}
+                    >
+                      {orderStatusOptions.map((status) => (
+                        <option key={status} value={status}>
+                          {status}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
                   <p className="text-stone-600">
                     Items: {order.items.length}
                   </p>
