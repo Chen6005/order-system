@@ -1,11 +1,13 @@
 import { useState } from "react";
 
+import { createOrder } from "@/lib/order-service";
 import type { CartItem, MenuItem, Order, OrderStatus } from "@/lib/types";
 
 export function useOrderSystem() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
+  const [orderError, setOrderError] = useState("");
 
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
   const cartTotal = cartItems.reduce(
@@ -15,6 +17,7 @@ export function useOrderSystem() {
 
   function addToCart(menuItem: MenuItem) {
     setCheckoutSuccess(false);
+    setOrderError("");
     setCartItems((currentItems) => {
       const existingItem = currentItems.find(
         (item) => item.menuItemId === menuItem.id,
@@ -42,6 +45,7 @@ export function useOrderSystem() {
 
   function increaseQuantity(menuItemId: string) {
     setCheckoutSuccess(false);
+    setOrderError("");
     setCartItems((currentItems) =>
       currentItems.map((item) =>
         item.menuItemId === menuItemId
@@ -53,6 +57,7 @@ export function useOrderSystem() {
 
   function decreaseQuantity(menuItemId: string) {
     setCheckoutSuccess(false);
+    setOrderError("");
     setCartItems((currentItems) =>
       currentItems
         .map((item) =>
@@ -64,10 +69,12 @@ export function useOrderSystem() {
     );
   }
 
-  function checkout() {
+  async function checkout() {
     if (cartItems.length === 0) {
       return;
     }
+
+    setOrderError("");
 
     const newOrder: Order = {
       id: Date.now().toString(),
@@ -76,9 +83,15 @@ export function useOrderSystem() {
       createdAt: new Date().toISOString(),
     };
 
-    setOrders((currentOrders) => [...currentOrders, newOrder]);
-    setCheckoutSuccess(true);
-    setCartItems([]);
+    try {
+      await createOrder(newOrder);
+      setOrders((currentOrders) => [...currentOrders, newOrder]);
+      setCheckoutSuccess(true);
+      setCartItems([]);
+    } catch {
+      setCheckoutSuccess(false);
+      setOrderError("訂單送出失敗，請稍後再試。");
+    }
   }
 
   function updateOrderStatus(orderId: string, status: OrderStatus) {
@@ -98,6 +111,7 @@ export function useOrderSystem() {
     checkoutSuccess,
     decreaseQuantity,
     increaseQuantity,
+    orderError,
     orders,
     updateOrderStatus,
   };

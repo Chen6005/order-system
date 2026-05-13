@@ -7,6 +7,7 @@ type CartSummaryProps = {
   onDecrease: (menuItemId: string) => void;
   onCheckout: () => void;
   checkoutSuccess: boolean;
+  orderError: string;
 };
 
 export function CartSummary({
@@ -16,6 +17,7 @@ export function CartSummary({
   onDecrease,
   onCheckout,
   checkoutSuccess,
+  orderError,
 }: CartSummaryProps) {
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -31,6 +33,12 @@ export function CartSummary({
       {checkoutSuccess ? (
         <p className="mt-4 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
           訂單送出成功
+        </p>
+      ) : null}
+
+      {orderError ? (
+        <p className="mt-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+          {orderError}
         </p>
       ) : null}
 

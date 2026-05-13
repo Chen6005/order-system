@@ -18,6 +18,7 @@ export default function Home() {
     checkoutSuccess,
     decreaseQuantity,
     increaseQuantity,
+    orderError,
     orders,
     updateOrderStatus,
   } = useOrderSystem();
@@ -48,6 +49,7 @@ export default function Home() {
           onCheckout={checkout}
           onDecrease={decreaseQuantity}
           onIncrease={increaseQuantity}
+          orderError={orderError}
           total={cartTotal}
         />
 
