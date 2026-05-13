@@ -42,6 +42,28 @@ export default function Home() {
     });
   }
 
+  function increaseCartItem(menuItemId: string) {
+    setCartItems((currentItems) =>
+      currentItems.map((item) =>
+        item.menuItemId === menuItemId
+          ? { ...item, quantity: item.quantity + 1 }
+          : item,
+      ),
+    );
+  }
+
+  function decreaseCartItem(menuItemId: string) {
+    setCartItems((currentItems) =>
+      currentItems
+        .map((item) =>
+          item.menuItemId === menuItemId
+            ? { ...item, quantity: item.quantity - 1 }
+            : item,
+        )
+        .filter((item) => item.quantity > 0),
+    );
+  }
+
   return (
     <main className="min-h-screen bg-stone-50 px-6 py-10 text-stone-950 sm:px-10 lg:px-16">
       <section className="mx-auto flex w-full max-w-5xl flex-col gap-10">
@@ -84,7 +106,25 @@ export default function Home() {
                     key={item.menuItemId}
                   >
                     <p className="font-medium text-stone-950">{item.name}</p>
-                    <p className="text-stone-600">Qty {item.quantity}</p>
+                    <div className="flex items-center gap-2 text-stone-600">
+                      <button
+                        aria-label={`Decrease ${item.name} quantity`}
+                        className="flex size-7 items-center justify-center rounded-md border border-stone-200 bg-stone-50 text-sm font-semibold text-stone-700 transition-colors hover:bg-stone-100"
+                        onClick={() => decreaseCartItem(item.menuItemId)}
+                        type="button"
+                      >
+                        -
+                      </button>
+                      <span>Qty {item.quantity}</span>
+                      <button
+                        aria-label={`Increase ${item.name} quantity`}
+                        className="flex size-7 items-center justify-center rounded-md border border-stone-200 bg-stone-50 text-sm font-semibold text-stone-700 transition-colors hover:bg-stone-100"
+                        onClick={() => increaseCartItem(item.menuItemId)}
+                        type="button"
+                      >
+                        +
+                      </button>
+                    </div>
                     <p className="text-stone-600">NT${item.price}</p>
                     <p className="font-semibold text-stone-950">
                       NT${item.price * item.quantity}
