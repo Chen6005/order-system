@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 
-import { createOrder, subscribeToOrders } from "@/lib/order-service";
+import {
+  createOrder,
+  subscribeToOrders,
+  updateOrderStatus as updateStoredOrderStatus,
+} from "@/lib/order-service";
 import type { CartItem, MenuItem, Order, OrderStatus } from "@/lib/types";
 
 export function useOrderSystem() {
@@ -102,12 +106,12 @@ export function useOrderSystem() {
     }
   }
 
-  function updateOrderStatus(orderId: string, status: OrderStatus) {
-    setOrders((currentOrders) =>
-      currentOrders.map((order) =>
-        order.id === orderId ? { ...order, status } : order,
-      ),
-    );
+  async function updateOrderStatus(orderId: string, status: OrderStatus) {
+    try {
+      await updateStoredOrderStatus(orderId, status);
+    } catch (error) {
+      console.error("Failed to update order status in Firestore.", error);
+    }
   }
 
   return {
