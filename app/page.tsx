@@ -1,21 +1,33 @@
+"use client";
+
+import { useState } from "react";
+
 import { menuItems } from "@/lib/mock-data";
 
 const availableMenuItems = menuItems.filter((item) => item.available);
 
 export default function Home() {
+  const [cartCount, setCartCount] = useState(0);
+
   return (
     <main className="min-h-screen bg-stone-50 px-6 py-10 text-stone-950 sm:px-10 lg:px-16">
       <section className="mx-auto flex w-full max-w-5xl flex-col gap-10">
-        <header className="max-w-2xl">
-          <p className="text-sm font-medium uppercase tracking-wide text-emerald-700">
-            Order System
-          </p>
-          <h1 className="mt-3 text-4xl font-semibold text-stone-950 sm:text-5xl">
-            Today&apos;s Menu
-          </h1>
-          <p className="mt-4 text-base leading-7 text-stone-600">
-            Browse the available dishes and choose what you would like to order.
-          </p>
+        <header className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+          <div className="max-w-2xl">
+            <p className="text-sm font-medium uppercase tracking-wide text-emerald-700">
+              Order System
+            </p>
+            <h1 className="mt-3 text-4xl font-semibold text-stone-950 sm:text-5xl">
+              Today&apos;s Menu
+            </h1>
+            <p className="mt-4 text-base leading-7 text-stone-600">
+              Browse the available dishes and choose what you would like to
+              order.
+            </p>
+          </div>
+          <div className="rounded-md border border-stone-200 bg-white px-4 py-2 text-sm font-semibold text-stone-950 shadow-sm">
+            Cart ({cartCount})
+          </div>
         </header>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -38,6 +50,7 @@ export default function Home() {
                 </p>
                 <button
                   className="rounded-md bg-emerald-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-800"
+                  onClick={() => setCartCount((count) => count + 1)}
                   type="button"
                 >
                   Add to Cart
