@@ -1,101 +1,26 @@
 "use client";
 
-import { useState } from "react";
-
 import { AdminOrders } from "@/components/AdminOrders";
 import { CartSummary } from "@/components/CartSummary";
 import { MenuItemCard } from "@/components/MenuItemCard";
+import { useOrderSystem } from "@/hooks/useOrderSystem";
 import { menuItems } from "@/lib/mock-data";
-import type { CartItem, MenuItem, Order, OrderStatus } from "@/lib/types";
 
 const availableMenuItems = menuItems.filter((item) => item.available);
 
 export default function Home() {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [orderSubmitted, setOrderSubmitted] = useState(false);
-
-  const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
-  const cartTotal = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0,
-  );
-
-  function handleAddToCart(menuItem: MenuItem) {
-    setOrderSubmitted(false);
-    setCartItems((currentItems) => {
-      const existingItem = currentItems.find(
-        (item) => item.menuItemId === menuItem.id,
-      );
-
-      if (existingItem) {
-        return currentItems.map((item) =>
-          item.menuItemId === menuItem.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item,
-        );
-      }
-
-      return [
-        ...currentItems,
-        {
-          menuItemId: menuItem.id,
-          name: menuItem.name,
-          price: menuItem.price,
-          quantity: 1,
-        },
-      ];
-    });
-  }
-
-  function increaseCartItem(menuItemId: string) {
-    setOrderSubmitted(false);
-    setCartItems((currentItems) =>
-      currentItems.map((item) =>
-        item.menuItemId === menuItemId
-          ? { ...item, quantity: item.quantity + 1 }
-          : item,
-      ),
-    );
-  }
-
-  function decreaseCartItem(menuItemId: string) {
-    setOrderSubmitted(false);
-    setCartItems((currentItems) =>
-      currentItems
-        .map((item) =>
-          item.menuItemId === menuItemId
-            ? { ...item, quantity: item.quantity - 1 }
-            : item,
-        )
-        .filter((item) => item.quantity > 0),
-    );
-  }
-
-  function handleCheckout() {
-    if (cartItems.length === 0) {
-      return;
-    }
-
-    const newOrder: Order = {
-      id: Date.now().toString(),
-      items: cartItems,
-      status: "new",
-      createdAt: new Date().toISOString(),
-    };
-
-    setOrders((currentOrders) => [...currentOrders, newOrder]);
-    setOrderSubmitted(true);
-    setCartItems([]);
-  }
-
-  function updateOrderStatus(orderId: string, status: OrderStatus) {
-    setOrders((currentOrders) =>
-      currentOrders.map((order) =>
-        order.id === orderId ? { ...order, status } : order,
-      ),
-    );
-  }
+  const {
+    addToCart,
+    cartCount,
+    cartItems,
+    cartTotal,
+    checkout,
+    checkoutSuccess,
+    decreaseQuantity,
+    increaseQuantity,
+    orders,
+    updateOrderStatus,
+  } = useOrderSystem();
 
   return (
     <main className="min-h-screen bg-stone-50 px-6 py-10 text-stone-950 sm:px-10 lg:px-16">
@@ -119,10 +44,10 @@ export default function Home() {
 
         <CartSummary
           cartItems={cartItems}
-          checkoutSuccess={orderSubmitted}
-          onCheckout={handleCheckout}
-          onDecrease={decreaseCartItem}
-          onIncrease={increaseCartItem}
+          checkoutSuccess={checkoutSuccess}
+          onCheckout={checkout}
+          onDecrease={decreaseQuantity}
+          onIncrease={increaseQuantity}
           total={cartTotal}
         />
 
@@ -131,7 +56,7 @@ export default function Home() {
             <MenuItemCard
               item={item}
               key={item.id}
-              onAddToCart={handleAddToCart}
+              onAddToCart={addToCart}
             />
           ))}
         </div>
