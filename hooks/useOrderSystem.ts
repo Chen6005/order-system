@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { createOrder } from "@/lib/order-service";
+import { createOrder, getOrders } from "@/lib/order-service";
 import type { CartItem, MenuItem, Order, OrderStatus } from "@/lib/types";
 
 export function useOrderSystem() {
@@ -14,6 +14,28 @@ export function useOrderSystem() {
     (total, item) => total + item.price * item.quantity,
     0,
   );
+
+  useEffect(() => {
+    let isActive = true;
+
+    async function loadOrders() {
+      try {
+        const storedOrders = await getOrders();
+
+        if (isActive) {
+          setOrders(storedOrders);
+        }
+      } catch (error) {
+        console.error("Failed to load orders from Firestore.", error);
+      }
+    }
+
+    loadOrders();
+
+    return () => {
+      isActive = false;
+    };
+  }, []);
 
   function addToCart(menuItem: MenuItem) {
     setCheckoutSuccess(false);
