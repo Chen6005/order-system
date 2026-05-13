@@ -9,6 +9,7 @@ const availableMenuItems = menuItems.filter((item) => item.available);
 
 export default function Home() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [orderSubmitted, setOrderSubmitted] = useState(false);
 
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
   const cartTotal = cartItems.reduce(
@@ -17,6 +18,7 @@ export default function Home() {
   );
 
   function handleAddToCart(menuItem: (typeof menuItems)[number]) {
+    setOrderSubmitted(false);
     setCartItems((currentItems) => {
       const existingItem = currentItems.find(
         (item) => item.menuItemId === menuItem.id,
@@ -43,6 +45,7 @@ export default function Home() {
   }
 
   function increaseCartItem(menuItemId: string) {
+    setOrderSubmitted(false);
     setCartItems((currentItems) =>
       currentItems.map((item) =>
         item.menuItemId === menuItemId
@@ -53,6 +56,7 @@ export default function Home() {
   }
 
   function decreaseCartItem(menuItemId: string) {
+    setOrderSubmitted(false);
     setCartItems((currentItems) =>
       currentItems
         .map((item) =>
@@ -62,6 +66,15 @@ export default function Home() {
         )
         .filter((item) => item.quantity > 0),
     );
+  }
+
+  function handleCheckout() {
+    if (cartItems.length === 0) {
+      return;
+    }
+
+    setOrderSubmitted(true);
+    setCartItems([]);
   }
 
   return (
@@ -94,6 +107,12 @@ export default function Home() {
               {cartCount} item{cartCount === 1 ? "" : "s"}
             </p>
           </div>
+
+          {orderSubmitted ? (
+            <p className="mt-4 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
+              Order submitted successfully.
+            </p>
+          ) : null}
 
           {cartItems.length === 0 ? (
             <p className="mt-4 text-sm text-stone-600">Your cart is empty.</p>
@@ -144,6 +163,7 @@ export default function Home() {
           <button
             className="mt-5 w-full rounded-md bg-emerald-700 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
             disabled={cartItems.length === 0}
+            onClick={handleCheckout}
             type="button"
           >
             Checkout
