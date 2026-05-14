@@ -10,6 +10,7 @@ export type MenuItem = {
   description: string;
   price: number;
   category: MenuCategory;
+  imageUrl: string;
   available: boolean;
 };
 

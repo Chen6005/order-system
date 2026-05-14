@@ -7,6 +7,7 @@ export const menuItems: MenuItem[] = [
     description: "冬瓜、薏米與排骨慢火細熬，湯色清潤，適合日常調養。",
     price: 180,
     category: "seasonalSoup",
+    imageUrl: "/images/winter-melon-pork-rib-soup.jpg",
     available: true,
   },
   {
@@ -15,6 +16,7 @@ export const menuItems: MenuItem[] = [
     description: "蓮藕、花生與章魚乾同煲，香氣溫厚，口感甘潤紮實。",
     price: 210,
     category: "seasonalSoup",
+    imageUrl: "/images/lotus-root-peanut-soup.jpg",
     available: true,
   },
   {
@@ -23,6 +25,7 @@ export const menuItems: MenuItem[] = [
     description: "烏雞佐黨參、北耆與紅棗慢燉，湯味醇和，補而不燥。",
     price: 260,
     category: "herbalSoup",
+    imageUrl: "/images/silkie-chicken-herbal-soup.jpg",
     available: true,
   },
   {
@@ -31,6 +34,7 @@ export const menuItems: MenuItem[] = [
     description: "蟲草花、淮山與雞肉細火燉煮，香甜清雅，適合養氣暖身。",
     price: 240,
     category: "herbalSoup",
+    imageUrl: "/images/cordyceps-flower-chicken-soup.jpg",
     available: true,
   },
   {
@@ -39,6 +43,7 @@ export const menuItems: MenuItem[] = [
     description: "雪耳與木瓜燉至柔滑，甜度溫和，潤喉養顏。",
     price: 120,
     category: "dessertSoup",
+    imageUrl: "/images/snow-fungus-papaya-dessert.jpg",
     available: true,
   },
   {
@@ -47,6 +52,7 @@ export const menuItems: MenuItem[] = [
     description: "黑芝麻與核桃細磨熬成濃滑糖水，香氣厚實，溫潤順口。",
     price: 130,
     category: "dessertSoup",
+    imageUrl: "/images/black-sesame-walnut-dessert.jpg",
     available: true,
   },
   {
@@ -55,6 +61,7 @@ export const menuItems: MenuItem[] = [
     description: "紅棗、桂圓與枸杞溫泡，茶湯甘甜，適合午後慢飲。",
     price: 90,
     category: "teaDrink",
+    imageUrl: "/images/red-date-longan-tea.jpg",
     available: true,
   },
   {
@@ -63,6 +70,7 @@ export const menuItems: MenuItem[] = [
     description: "菊花與枸杞清泡，入口淡雅回甘，帶來清爽舒緩的茶韻。",
     price: 85,
     category: "teaDrink",
+    imageUrl: "/images/chrysanthemum-goji-tea.jpg",
     available: true,
   },
 ];
