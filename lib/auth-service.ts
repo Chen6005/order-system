@@ -1,4 +1,9 @@
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+  type User,
+} from "firebase/auth";
 
 import { auth } from "./firebase";
 
@@ -11,4 +16,10 @@ export async function signInAdmin(
 
 export async function signOutAdmin(): Promise<void> {
   await signOut(auth);
+}
+
+export function subscribeToAuthState(
+  callback: (user: User | null) => void,
+): () => void {
+  return onAuthStateChanged(auth, callback);
 }
