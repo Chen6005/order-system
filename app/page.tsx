@@ -1,11 +1,19 @@
 "use client";
 
 import { CartSummary } from "@/components/CartSummary";
-import { MenuItemCard } from "@/components/MenuItemCard";
+import { MenuCategorySection } from "@/components/MenuCategorySection";
 import { useOrderSystem } from "@/hooks/useOrderSystem";
 import { menuItems } from "@/lib/mock-data";
+import type { MenuCategory } from "@/lib/types";
 
 const availableMenuItems = menuItems.filter((item) => item.available);
+const categoryOrder: MenuCategory[] = ["pasta", "pizza", "drink", "dessert"];
+const categoryLabels: Record<MenuCategory, string> = {
+  pasta: "義大利麵",
+  pizza: "披薩",
+  drink: "飲品",
+  dessert: "甜點",
+};
 
 export default function Home() {
   const {
@@ -50,14 +58,25 @@ export default function Home() {
           total={cartTotal}
         />
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {availableMenuItems.map((item) => (
-            <MenuItemCard
-              item={item}
-              key={item.id}
-              onAddToCart={addToCart}
-            />
-          ))}
+        <div className="flex flex-col gap-8">
+          {categoryOrder.map((category) => {
+            const categoryItems = availableMenuItems.filter(
+              (item) => item.category === category,
+            );
+
+            if (categoryItems.length === 0) {
+              return null;
+            }
+
+            return (
+              <MenuCategorySection
+                items={categoryItems}
+                key={category}
+                onAddToCart={addToCart}
+                title={categoryLabels[category]}
+              />
+            );
+          })}
         </div>
       </section>
     </main>
