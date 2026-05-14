@@ -7,7 +7,7 @@ import {
 } from "@/lib/order-service";
 import type { CartItem, MenuItem, Order, OrderStatus } from "@/lib/types";
 
-export function useOrderSystem() {
+export function useOrderSystem(isAdminAuthenticated: boolean) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
@@ -20,12 +20,17 @@ export function useOrderSystem() {
   );
 
   useEffect(() => {
+    if (!isAdminAuthenticated) {
+      queueMicrotask(() => setOrders([]));
+      return;
+    }
+
     const unsubscribe = subscribeToOrders(setOrders, (error) => {
       console.error("Failed to subscribe to orders from Firestore.", error);
     });
 
     return unsubscribe;
-  }, []);
+  }, [isAdminAuthenticated]);
 
   function addToCart(menuItem: MenuItem) {
     setCheckoutSuccess(false);
@@ -97,7 +102,6 @@ export function useOrderSystem() {
 
     try {
       await createOrder(newOrder);
-      setOrders((currentOrders) => [...currentOrders, newOrder]);
       setCheckoutSuccess(true);
       setCartItems([]);
     } catch {

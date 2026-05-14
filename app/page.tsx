@@ -11,6 +11,7 @@ import { menuItems } from "@/lib/mock-data";
 const availableMenuItems = menuItems.filter((item) => item.available);
 
 export default function Home() {
+  const { authError, isLoading, login, logout, user } = useAdminAuth();
   const {
     addToCart,
     cartCount,
@@ -23,8 +24,7 @@ export default function Home() {
     orderError,
     orders,
     updateOrderStatus,
-  } = useOrderSystem();
-  const { authError, isLoading, login, logout, user } = useAdminAuth();
+  } = useOrderSystem(Boolean(user));
 
   return (
     <main className="min-h-screen bg-stone-50 px-6 py-10 text-stone-950 sm:px-10 lg:px-16">
