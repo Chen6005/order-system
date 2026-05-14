@@ -2,9 +2,14 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // MVP testing rule: allow temporary reads and writes for orders only.
+    // Phase 1 security rules:
+    // Customers can create orders without signing in.
+    // Signed-in users can read and update orders.
+    // This does not include a real admin role yet.
     match /orders/{orderId} {
-      allow read, write: if true;
+      allow create: if true;
+      allow read, update: if request.auth != null;
+      allow delete: if false;
     }
 
     match /{document=**} {
