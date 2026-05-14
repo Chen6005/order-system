@@ -1,8 +1,8 @@
 export type MenuCategory =
-  | "pasta"
-  | "pizza"
-  | "drink"
-  | "dessert";
+  | "seasonalSoup"
+  | "herbalSoup"
+  | "dessertSoup"
+  | "teaDrink";
 
 export type MenuItem = {
   id: string;

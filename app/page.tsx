@@ -7,12 +7,17 @@ import { menuItems } from "@/lib/mock-data";
 import type { MenuCategory } from "@/lib/types";
 
 const availableMenuItems = menuItems.filter((item) => item.available);
-const categoryOrder: MenuCategory[] = ["pasta", "pizza", "drink", "dessert"];
+const categoryOrder: MenuCategory[] = [
+  "seasonalSoup",
+  "herbalSoup",
+  "dessertSoup",
+  "teaDrink",
+];
 const categoryLabels: Record<MenuCategory, string> = {
-  pasta: "義大利麵",
-  pizza: "披薩",
-  drink: "飲品",
-  dessert: "甜點",
+  seasonalSoup: "四季湯水",
+  herbalSoup: "養生燉湯",
+  dessertSoup: "養生糖水",
+  teaDrink: "養生茶飲",
 };
 
 export default function Home() {
