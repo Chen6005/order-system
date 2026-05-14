@@ -7,19 +7,20 @@ type MenuItemCardProps = {
 
 export function MenuItemCard({ item, onAddToCart }: MenuItemCardProps) {
   return (
-    <article className="flex min-h-48 flex-col justify-between rounded-lg border border-stone-200 bg-white p-5 shadow-sm">
+    <article className="flex min-h-56 flex-col justify-between rounded-lg border border-[#ddc9a5] bg-[#fffaf2] p-5 shadow-sm">
       <div>
-        <h2 className="text-xl font-semibold text-stone-950">{item.name}</h2>
-        <p className="mt-3 text-sm leading-6 text-stone-600">
+        <div className="mb-4 h-1 w-12 rounded-full bg-[#c8a45d]" />
+        <h2 className="text-xl font-semibold text-[#2f251d]">{item.name}</h2>
+        <p className="mt-3 text-sm leading-6 text-[#6c5b49]">
           {item.description}
         </p>
       </div>
       <div className="mt-6 flex items-center justify-between gap-4">
-        <p className="text-lg font-semibold text-emerald-700">
+        <p className="text-lg font-semibold text-[#234336]">
           NT${item.price}
         </p>
         <button
-          className="rounded-md bg-emerald-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-800"
+          className="rounded-full bg-[#234336] px-4 py-2 text-sm font-medium text-[#fffaf0] transition-colors hover:bg-[#1b342a]"
           onClick={() => onAddToCart(item)}
           type="button"
         >
