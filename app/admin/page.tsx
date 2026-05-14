@@ -7,7 +7,8 @@ import { useOrderSystem } from "@/hooks/useOrderSystem";
 
 export default function AdminPage() {
   const { authError, isLoading, login, logout, user } = useAdminAuth();
-  const { orders, updateOrderStatus } = useOrderSystem(Boolean(user));
+  const isAdminAuthenticated = Boolean(user);
+  const { orders, updateOrderStatus } = useOrderSystem(isAdminAuthenticated);
 
   return (
     <main className="min-h-screen bg-stone-50 px-6 py-10 text-stone-950 sm:px-10 lg:px-16">
@@ -21,7 +22,11 @@ export default function AdminPage() {
           </h1>
         </header>
 
-        {user ? (
+        {isLoading ? (
+          <section className="rounded-lg border border-stone-200 bg-white p-5 text-sm font-medium text-stone-700 shadow-sm">
+            驗證管理員登入狀態中...
+          </section>
+        ) : user ? (
           <section className="flex flex-col gap-4">
             <div className="flex flex-col gap-3 rounded-lg border border-stone-200 bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
               <div>
