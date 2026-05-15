@@ -31,6 +31,9 @@ const seasonFilters: { label: string; value: SeasonFilter }[] = [
   { label: "冬季", value: "winter" },
   { label: "四季皆宜", value: "allYear" },
 ];
+const recommendedItems = availableMenuItems
+  .filter((item) => item.season === "autumn" || item.season === "allYear")
+  .slice(0, 3);
 
 export default function Home() {
   const [selectedSeason, setSelectedSeason] = useState<SeasonFilter>("all");
@@ -105,6 +108,12 @@ export default function Home() {
             })}
           </div>
         </section>
+
+        <MenuCategorySection
+          items={recommendedItems}
+          onAddToCart={addToCart}
+          title="本季推薦"
+        />
 
         <div className="flex flex-col gap-8">
           {categoryOrder.map((category) => {
