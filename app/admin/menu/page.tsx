@@ -7,8 +7,11 @@ import { AdminLoginForm } from "@/components/AdminLoginForm";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useMenuItems } from "@/hooks/useMenuItems";
 import { isAdminEmail } from "@/lib/admin";
-import { updateMenuItemAvailability } from "@/lib/menu-service";
-import type { MenuCategory, Season } from "@/lib/types";
+import {
+  createMenuItem,
+  updateMenuItemAvailability,
+} from "@/lib/menu-service";
+import type { MenuCategory, MenuItem, Season } from "@/lib/types";
 
 const categoryLabels: Record<MenuCategory, string> = {
   seasonalSoup: "四季湯水",
@@ -25,11 +28,47 @@ const seasonLabels: Record<Season, string> = {
   allYear: "四季皆宜",
 };
 
+const categoryOptions: MenuCategory[] = [
+  "seasonalSoup",
+  "herbalSoup",
+  "dessertSoup",
+  "teaDrink",
+];
+
+const seasonOptions: Season[] = [
+  "spring",
+  "summer",
+  "autumn",
+  "winter",
+  "allYear",
+];
+
+type MenuFormState = {
+  name: string;
+  description: string;
+  price: string;
+  category: MenuCategory;
+  season: Season;
+  imageUrl: string;
+};
+
+const initialMenuFormState: MenuFormState = {
+  name: "",
+  description: "",
+  price: "",
+  category: "seasonalSoup",
+  season: "allYear",
+  imageUrl: "",
+};
+
 export default function AdminMenuPage() {
   const { authError, isLoading, login, user } = useAdminAuth();
   const { isLoading: isMenuLoading, menuError, menuItems } = useMenuItems();
   const isAuthorizedAdmin = isAdminEmail(user?.email);
   const [availabilityError, setAvailabilityError] = useState("");
+  const [menuForm, setMenuForm] = useState<MenuFormState>(initialMenuFormState);
+  const [createSuccessMessage, setCreateSuccessMessage] = useState("");
+  const [createErrorMessage, setCreateErrorMessage] = useState("");
 
   const handleToggleAvailability = async (
     menuItemId: string,
@@ -42,6 +81,32 @@ export default function AdminMenuPage() {
     } catch (error) {
       console.error(error);
       setAvailabilityError("商品狀態更新失敗，請稍後再試。");
+    }
+  };
+
+  const handleCreateMenuItem = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setCreateSuccessMessage("");
+    setCreateErrorMessage("");
+
+    const newMenuItem: MenuItem = {
+      id: crypto.randomUUID(),
+      name: menuForm.name,
+      description: menuForm.description,
+      price: Number(menuForm.price),
+      category: menuForm.category,
+      season: menuForm.season,
+      imageUrl: menuForm.imageUrl,
+      available: true,
+    };
+
+    try {
+      await createMenuItem(newMenuItem);
+      setMenuForm(initialMenuFormState);
+      setCreateSuccessMessage("商品新增成功");
+    } catch (error) {
+      console.error(error);
+      setCreateErrorMessage("商品新增失敗，請稍後再試");
     }
   };
 
@@ -61,6 +126,115 @@ export default function AdminMenuPage() {
           </section>
         ) : user && isAuthorizedAdmin ? (
           <section className="flex flex-col gap-5">
+            <section className="rounded-lg border border-[#d9c7a8] bg-[#fffaf0] p-5 shadow-sm">
+              <h2 className="text-lg font-semibold text-[#234336]">新增商品</h2>
+              <form className="mt-4 grid gap-3" onSubmit={handleCreateMenuItem}>
+                <input
+                  className="rounded-md border border-[#d6bc82] bg-white px-3 py-2 text-sm text-[#2f251d] outline-none ring-[#234336] focus:ring-2"
+                  onChange={(event) =>
+                    setMenuForm((previous) => ({
+                      ...previous,
+                      name: event.target.value,
+                    }))
+                  }
+                  placeholder="商品名稱"
+                  required
+                  type="text"
+                  value={menuForm.name}
+                />
+                <textarea
+                  className="min-h-24 rounded-md border border-[#d6bc82] bg-white px-3 py-2 text-sm text-[#2f251d] outline-none ring-[#234336] focus:ring-2"
+                  onChange={(event) =>
+                    setMenuForm((previous) => ({
+                      ...previous,
+                      description: event.target.value,
+                    }))
+                  }
+                  placeholder="商品描述"
+                  required
+                  value={menuForm.description}
+                />
+                <input
+                  className="rounded-md border border-[#d6bc82] bg-white px-3 py-2 text-sm text-[#2f251d] outline-none ring-[#234336] focus:ring-2"
+                  min={0}
+                  onChange={(event) =>
+                    setMenuForm((previous) => ({
+                      ...previous,
+                      price: event.target.value,
+                    }))
+                  }
+                  placeholder="價格"
+                  required
+                  step="1"
+                  type="number"
+                  value={menuForm.price}
+                />
+                <select
+                  className="rounded-md border border-[#d6bc82] bg-white px-3 py-2 text-sm text-[#2f251d] outline-none ring-[#234336] focus:ring-2"
+                  onChange={(event) =>
+                    setMenuForm((previous) => ({
+                      ...previous,
+                      category: event.target.value as MenuCategory,
+                    }))
+                  }
+                  value={menuForm.category}
+                >
+                  {categoryOptions.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  className="rounded-md border border-[#d6bc82] bg-white px-3 py-2 text-sm text-[#2f251d] outline-none ring-[#234336] focus:ring-2"
+                  onChange={(event) =>
+                    setMenuForm((previous) => ({
+                      ...previous,
+                      season: event.target.value as Season,
+                    }))
+                  }
+                  value={menuForm.season}
+                >
+                  {seasonOptions.map((season) => (
+                    <option key={season} value={season}>
+                      {season}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  className="rounded-md border border-[#d6bc82] bg-white px-3 py-2 text-sm text-[#2f251d] outline-none ring-[#234336] focus:ring-2"
+                  onChange={(event) =>
+                    setMenuForm((previous) => ({
+                      ...previous,
+                      imageUrl: event.target.value,
+                    }))
+                  }
+                  placeholder="imageUrl"
+                  required
+                  type="text"
+                  value={menuForm.imageUrl}
+                />
+                <div className="flex items-center gap-3">
+                  <button
+                    className="rounded-md border border-[#b69258] bg-[#f5e8cf] px-4 py-2 text-sm font-medium text-[#704f1f] transition hover:bg-[#eddab8]"
+                    type="submit"
+                  >
+                    新增商品
+                  </button>
+                  {createSuccessMessage ? (
+                    <p className="text-sm font-medium text-[#25553f]">
+                      {createSuccessMessage}
+                    </p>
+                  ) : null}
+                  {createErrorMessage ? (
+                    <p className="text-sm font-medium text-red-700">
+                      {createErrorMessage}
+                    </p>
+                  ) : null}
+                </div>
+              </form>
+            </section>
+
             {availabilityError ? (
               <section className="rounded-lg border border-red-200 bg-red-50 p-5 text-sm font-medium text-red-700 shadow-sm">
                 {availabilityError}
