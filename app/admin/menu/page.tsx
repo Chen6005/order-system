@@ -1,11 +1,13 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 
 import { AdminLoginForm } from "@/components/AdminLoginForm";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useMenuItems } from "@/hooks/useMenuItems";
 import { isAdminEmail } from "@/lib/admin";
+import { updateMenuItemAvailability } from "@/lib/menu-service";
 import type { MenuCategory, Season } from "@/lib/types";
 
 const categoryLabels: Record<MenuCategory, string> = {
@@ -25,12 +27,23 @@ const seasonLabels: Record<Season, string> = {
 
 export default function AdminMenuPage() {
   const { authError, isLoading, login, user } = useAdminAuth();
-  const {
-    isLoading: isMenuLoading,
-    menuError,
-    menuItems,
-  } = useMenuItems();
+  const { isLoading: isMenuLoading, menuError, menuItems } = useMenuItems();
   const isAuthorizedAdmin = isAdminEmail(user?.email);
+  const [availabilityError, setAvailabilityError] = useState("");
+
+  const handleToggleAvailability = async (
+    menuItemId: string,
+    available: boolean,
+  ) => {
+    setAvailabilityError("");
+
+    try {
+      await updateMenuItemAvailability(menuItemId, !available);
+    } catch (error) {
+      console.error(error);
+      setAvailabilityError("商品狀態更新失敗，請稍後再試。");
+    }
+  };
 
   return (
     <main className="min-h-screen bg-[#f8f3ea] px-6 py-10 text-[#2f251d] sm:px-10 lg:px-16">
@@ -48,6 +61,11 @@ export default function AdminMenuPage() {
           </section>
         ) : user && isAuthorizedAdmin ? (
           <section className="flex flex-col gap-5">
+            {availabilityError ? (
+              <section className="rounded-lg border border-red-200 bg-red-50 p-5 text-sm font-medium text-red-700 shadow-sm">
+                {availabilityError}
+              </section>
+            ) : null}
             {isMenuLoading ? (
               <section className="rounded-lg border border-[#d9c7a8] bg-[#fffaf0] p-5 text-sm font-medium text-[#6c5b49] shadow-sm">
                 菜單載入中...
@@ -94,6 +112,27 @@ export default function AdminMenuPage() {
                       <p className="text-lg font-semibold text-[#234336]">
                         NT${item.price}
                       </p>
+
+                      <div className="flex items-center justify-between gap-3">
+                        <span
+                          className={`rounded-full px-3 py-1 text-xs font-medium ${
+                            item.available
+                              ? "bg-[#eaf6ec] text-[#25553f]"
+                              : "bg-[#f6ece3] text-[#7a5a2f]"
+                          }`}
+                        >
+                          {item.available ? "供應中" : "已下架"}
+                        </span>
+                        <button
+                          className="rounded-md border border-[#b69258] bg-[#f5e8cf] px-3 py-2 text-sm font-medium text-[#704f1f] transition hover:bg-[#eddab8]"
+                          onClick={() =>
+                            handleToggleAvailability(item.id, item.available)
+                          }
+                          type="button"
+                        >
+                          {item.available ? "下架" : "恢復供應"}
+                        </button>
+                      </div>
                     </div>
                   </article>
                 ))}
