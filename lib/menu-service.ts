@@ -1,4 +1,10 @@
-import { collection, doc, onSnapshot, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 
 import { db } from "./firebase";
 import { menuItems } from "./mock-data";
@@ -33,4 +39,11 @@ export async function seedMenuItems(): Promise<void> {
       setDoc(doc(db, menuItemsCollection, item.id), item),
     ),
   );
+}
+
+export async function updateMenuItemAvailability(
+  menuItemId: string,
+  available: boolean,
+): Promise<void> {
+  await updateDoc(doc(db, menuItemsCollection, menuItemId), { available });
 }
