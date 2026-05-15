@@ -8,6 +8,7 @@ import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useMenuItems } from "@/hooks/useMenuItems";
 import { isAdminEmail } from "@/lib/admin";
 import {
+  archiveMenuItem,
   createMenuItem,
   updateMenuItem,
   updateMenuItemAvailability,
@@ -78,6 +79,8 @@ export default function AdminMenuPage() {
   const [editForm, setEditForm] = useState<MenuFormState | null>(null);
   const [editSuccessMessage, setEditSuccessMessage] = useState("");
   const [editErrorMessage, setEditErrorMessage] = useState("");
+  const [archiveSuccessMessage, setArchiveSuccessMessage] = useState("");
+  const [archiveErrorMessage, setArchiveErrorMessage] = useState("");
   const activeMenuItems = menuItems.filter((item) => !item.archived);
 
   const handleToggleAvailability = async (
@@ -170,6 +173,19 @@ export default function AdminMenuPage() {
     } catch (error) {
       console.error(error);
       setEditErrorMessage("商品更新失敗，請稍後再試");
+    }
+  };
+
+  const handleArchiveMenuItem = async (menuItemId: string) => {
+    setArchiveSuccessMessage("");
+    setArchiveErrorMessage("");
+
+    try {
+      await archiveMenuItem(menuItemId);
+      setArchiveSuccessMessage("商品已封存");
+    } catch (error) {
+      console.error(error);
+      setArchiveErrorMessage("商品封存失敗，請稍後再試");
     }
   };
 
@@ -313,6 +329,16 @@ export default function AdminMenuPage() {
                 {editErrorMessage}
               </section>
             ) : null}
+            {archiveSuccessMessage ? (
+              <section className="rounded-lg border border-[#b9d2bd] bg-[#edf5eb] p-5 text-sm font-medium text-[#234336] shadow-sm">
+                {archiveSuccessMessage}
+              </section>
+            ) : null}
+            {archiveErrorMessage ? (
+              <section className="rounded-lg border border-red-200 bg-red-50 p-5 text-sm font-medium text-red-700 shadow-sm">
+                {archiveErrorMessage}
+              </section>
+            ) : null}
             {isMenuLoading ? (
               <section className="rounded-lg border border-[#d9c7a8] bg-[#fffaf0] p-5 text-sm font-medium text-[#6c5b49] shadow-sm">
                 菜單載入中...
@@ -388,6 +414,13 @@ export default function AdminMenuPage() {
                             type="button"
                           >
                             編輯
+                          </button>
+                          <button
+                            className="rounded-md border border-[#8f5f5f] bg-[#f6e7e7] px-3 py-2 text-sm font-medium text-[#7b3333] transition hover:bg-[#f0d8d8]"
+                            onClick={() => handleArchiveMenuItem(item.id)}
+                            type="button"
+                          >
+                            封存
                           </button>
                         </div>
 
