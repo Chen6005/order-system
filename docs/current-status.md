@@ -19,7 +19,7 @@
 - Firestore `orders` collection 持續支援 checkout 寫入與 realtime 同步。
 - `mock-data` 目前仍保留作為 seed source。
 
-## Menu Management（本次重點）
+## Menu Management
 
 - Admin `/admin/menu` 已支援查看 Firestore `menuItems`。
 - 已支援新增商品（Create）。
@@ -31,6 +31,18 @@
   - `available: false`
 - 顧客首頁只顯示 `available === true` 且 `archived === false` 的商品。
 - menu management 已進入 CRUD 階段（目前已完成 Create / Read / Update 與 Soft Delete）。
+
+## Order Workflow Sections（本次更新）
+
+- Admin 訂單管理已分成三區：
+  - 新訂單
+  - 製作中
+  - 已完成
+- 新訂單會進入「新訂單」區塊。
+- 狀態改為「製作中」後會移到「製作中」區塊。
+- 狀態改為「已完成」後會移到「已完成」區塊。
+- 本地驗證已通過。
+- Production 已部署完成。
 
 ## Admin 與權限
 
