@@ -52,6 +52,13 @@ export async function updateMenuItemAvailability(
   await updateDoc(doc(db, menuItemsCollection, menuItemId), { available });
 }
 
+export async function archiveMenuItem(menuItemId: string): Promise<void> {
+  await updateDoc(doc(db, menuItemsCollection, menuItemId), {
+    archived: true,
+    available: false,
+  });
+}
+
 export async function updateMenuItem(
   menuItemId: string,
   updates: Partial<MenuItem>,
