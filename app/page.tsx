@@ -1,12 +1,16 @@
 "use client";
 
+import { useState } from "react";
+
 import { CartSummary } from "@/components/CartSummary";
 import { MenuCategorySection } from "@/components/MenuCategorySection";
 import { useOrderSystem } from "@/hooks/useOrderSystem";
 import { menuItems } from "@/lib/mock-data";
-import type { MenuCategory } from "@/lib/types";
+import type { MenuCategory, Season } from "@/lib/types";
 
 const availableMenuItems = menuItems.filter((item) => item.available);
+type SeasonFilter = Season | "all";
+
 const categoryOrder: MenuCategory[] = [
   "seasonalSoup",
   "herbalSoup",
@@ -19,8 +23,17 @@ const categoryLabels: Record<MenuCategory, string> = {
   dessertSoup: "養生糖水",
   teaDrink: "養生茶飲",
 };
+const seasonFilters: { label: string; value: SeasonFilter }[] = [
+  { label: "全部", value: "all" },
+  { label: "春季", value: "spring" },
+  { label: "夏季", value: "summer" },
+  { label: "秋季", value: "autumn" },
+  { label: "冬季", value: "winter" },
+  { label: "四季皆宜", value: "allYear" },
+];
 
 export default function Home() {
+  const [selectedSeason, setSelectedSeason] = useState<SeasonFilter>("all");
   const {
     addToCart,
     cartCount,
@@ -32,6 +45,10 @@ export default function Home() {
     increaseQuantity,
     orderError,
   } = useOrderSystem(false);
+  const filteredMenuItems =
+    selectedSeason === "all"
+      ? availableMenuItems
+      : availableMenuItems.filter((item) => item.season === selectedSeason);
 
   return (
     <main className="min-h-screen bg-[#f8f3ea] px-6 py-10 text-[#2f251d] sm:px-10 lg:px-16">
@@ -65,9 +82,33 @@ export default function Home() {
           total={cartTotal}
         />
 
+        <section className="flex flex-col gap-3">
+          <h2 className="text-lg font-semibold text-[#234336]">依季節篩選</h2>
+          <div className="flex flex-wrap gap-2">
+            {seasonFilters.map((filter) => {
+              const isSelected = selectedSeason === filter.value;
+
+              return (
+                <button
+                  className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                    isSelected
+                      ? "border-[#234336] bg-[#234336] text-[#fffaf0]"
+                      : "border-[#d6bc82] bg-[#fffaf0] text-[#7a5a2f] hover:bg-[#efe4d0]"
+                  }`}
+                  key={filter.value}
+                  onClick={() => setSelectedSeason(filter.value)}
+                  type="button"
+                >
+                  {filter.label}
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
         <div className="flex flex-col gap-8">
           {categoryOrder.map((category) => {
-            const categoryItems = availableMenuItems.filter(
+            const categoryItems = filteredMenuItems.filter(
               (item) => item.category === category,
             );
 
