@@ -1,6 +1,6 @@
 # 目前 Production 狀態
 
-## 已完成功能重點
+## 已完成能力重點
 
 - 品牌已改為「廣東養生堂」。
 - 顧客首頁主軸為「四季湯水・養生糖水」。
@@ -9,33 +9,34 @@
   - 養生燉湯
   - 養生糖水
   - 養生茶飲
-- 目前共有 8 個商品，且已支援 `season` 欄位與 SVG 商品圖片。
-- 本季推薦功能已完成（最多顯示 3 個商品）。
-- 季節篩選功能已完成（全部、春季、夏季、秋季、冬季、四季皆宜）。
+- 商品已支援 `season` 欄位與 SVG 圖片。
+- 本季推薦與季節篩選功能已完成。
 
 ## Firestore 與資料流
 
-- `menuItems` 已建立 Firestore collection，且 8 個商品已完成 seed。
-- 顧客首頁已改為從 Firestore `menuItems` realtime 讀取菜單。
-- `mock-data` 目前仍保留，作為菜單 seed source。
-- Checkout 會寫入 Firestore `orders` collection。
-- 訂單管理支援 Firestore realtime 同步。
+- Firestore `menuItems` collection 已建立並可穩定讀取。
+- 顧客首頁已改為從 Firestore `menuItems` realtime 顯示菜單。
+- Firestore `orders` collection 持續支援 checkout 寫入與 realtime 同步。
+- `mock-data` 目前仍保留作為 seed source。
 
-## 商品上下架管理（本次更新）
+## Menu Management（本次重點）
 
-- Admin `/admin/menu` 已可查看 Firestore `menuItems`。
-- Admin 可切換商品 `available` 狀態（下架 / 恢復供應）。
-- 顧客首頁只顯示 `available === true` 的商品。
-- 下架商品會從顧客首頁即時消失。
-- 恢復供應後會即時回到顧客首頁。
-- Production 已完成商品上下架 realtime flow 驗證。
+- Admin `/admin/menu` 已支援查看 Firestore `menuItems`。
+- 已支援新增商品（Create）。
+- 已支援編輯商品（Update）。
+- 已支援上下架商品（availability update）。
+- 已支援封存商品（soft delete）。
+- 封存商品會設定：
+  - `archived: true`
+  - `available: false`
+- 顧客首頁只顯示 `available === true` 且 `archived === false` 的商品。
+- menu management 已進入 CRUD 階段（目前已完成 Create / Read / Update 與 Soft Delete）。
 
 ## Admin 與權限
 
 - Admin 後台路徑：`/admin`
-- Admin 需先登入 Firebase Authentication。
-- 只有登入且通過 allowlist 的帳號可看到訂單管理。
-- 未登入或非 allowlist 狀態不會啟動 orders subscription。
+- Admin 需登入 Firebase Authentication。
+- 只有登入且通過 allowlist 的帳號可查看管理內容。
 
 ## Production URL
 
@@ -60,4 +61,3 @@ Vercel Production 已設定 Firebase Web SDK 需要的變數：
 - 多店鋪管理
 - 外送追蹤
 - 真正的 admin role / custom claims
-
