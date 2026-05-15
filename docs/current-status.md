@@ -13,6 +13,10 @@
 - 目前共有 8 個商品。
 - 商品資料已支援 `season` 欄位。
 - 商品卡已支援 SVG 圖片。
+- `menuItems` 已建立 Firestore collection。
+- 目前 8 個商品已 seed 到 Firestore `menuItems` collection。
+- 顧客首頁已改為從 Firestore `menuItems` realtime 讀取菜單。
+- `mock-data` 目前仍保留作為 menu seed source。
 - 本季推薦區塊已完成，目前推薦秋季與四季皆宜商品，最多顯示 3 個商品。
 - 季節篩選已完成，可切換全部、春季、夏季、秋季、冬季與四季皆宜。
 - 顧客可以將商品加入購物車。
@@ -26,14 +30,17 @@
 - 訂單管理可以讀取 Firestore orders。
 - 訂單狀態更新會寫回 Firestore。
 - orders collection 已支援 realtime sync。
-- Vercel production 已部署並完成產品化版本驗證。
+- Vercel production 已部署並完成 Firestore menu source 驗證。
 
 ## 目前資料狀態
 
-目前訂單資料已接入 Firebase Firestore。
+目前菜單資料與訂單資料已接入 Firebase Firestore。
 
 這表示：
 
+- 顧客首頁菜單來源為 Firestore `menuItems` collection。
+- Firestore `menuItems` 已有 8 筆商品資料。
+- `mock-data` 仍保留在程式中，作為 seed Firestore menuItems 的來源。
 - 顧客送出的訂單會儲存在 Firestore `orders` collection。
 - Checkout 仍可正常寫入 Firestore。
 - Admin 登入後可從 Firestore 讀取訂單。
