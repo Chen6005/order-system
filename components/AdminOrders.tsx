@@ -27,8 +27,12 @@ type WorkflowSection = {
   orders: Order[];
 };
 
+function getWaitingMinutes(createdAt: string): number {
+  return Math.floor((Date.now() - new Date(createdAt).getTime()) / 60000);
+}
+
 function getWaitingTimeLabel(createdAt: string): string {
-  const minutes = Math.floor((Date.now() - new Date(createdAt).getTime()) / 60000);
+  const minutes = getWaitingMinutes(createdAt);
 
   if (minutes < 1) {
     return "剛剛建立";
@@ -114,37 +118,47 @@ export function AdminOrders({ orders, onStatusChange }: AdminOrdersProps) {
                   </p>
                 ) : (
                   <div className="flex flex-col gap-3">
-                    {section.orders.map((order) => (
-                      <article
-                        className="grid gap-2 rounded-md border border-stone-100 bg-stone-50 p-4 text-sm sm:grid-cols-[1fr_auto_auto_auto] sm:items-center"
-                        key={order.id}
-                      >
-                        <div>
-                          <p className="font-medium text-stone-950">訂單 #{order.id}</p>
-                          <p className="mt-1 text-xs font-medium text-amber-700">
-                            {getWaitingTimeLabel(order.createdAt)}
-                          </p>
-                        </div>
-                        <label className="flex items-center gap-2 text-stone-600">
-                          <span>狀態</span>
-                          <select
-                            className="rounded-md border border-stone-200 bg-white px-3 py-2 text-sm text-stone-950"
-                            onChange={(event) =>
-                              onStatusChange(order.id, event.target.value as OrderStatus)
-                            }
-                            value={order.status}
-                          >
-                            {orderStatusOptions.map((status) => (
-                              <option key={status} value={status}>
-                                {orderStatusLabels[status]}
-                              </option>
-                            ))}
-                          </select>
-                        </label>
-                        <p className="text-stone-600">品項數：{order.items.length}</p>
-                        <p className="text-stone-600">{order.createdAt}</p>
-                      </article>
-                    ))}
+                    {section.orders.map((order) => {
+                      const isOverduePending =
+                        order.status === "new" && getWaitingMinutes(order.createdAt) >= 10;
+
+                      return (
+                        <article
+                          className="grid gap-2 rounded-md border border-stone-100 bg-stone-50 p-4 text-sm sm:grid-cols-[1fr_auto_auto_auto] sm:items-center"
+                          key={order.id}
+                        >
+                          <div>
+                            <p className="font-medium text-stone-950">訂單 #{order.id}</p>
+                            <p className="mt-1 text-xs font-medium text-amber-700">
+                              {getWaitingTimeLabel(order.createdAt)}
+                            </p>
+                            {isOverduePending ? (
+                              <p className="mt-2 inline-flex rounded-full bg-red-100 px-2.5 py-1 text-xs font-semibold text-red-700 ring-1 ring-red-200">
+                                已等待超過 10 分鐘
+                              </p>
+                            ) : null}
+                          </div>
+                          <label className="flex items-center gap-2 text-stone-600">
+                            <span>狀態</span>
+                            <select
+                              className="rounded-md border border-stone-200 bg-white px-3 py-2 text-sm text-stone-950"
+                              onChange={(event) =>
+                                onStatusChange(order.id, event.target.value as OrderStatus)
+                              }
+                              value={order.status}
+                            >
+                              {orderStatusOptions.map((status) => (
+                                <option key={status} value={status}>
+                                  {orderStatusLabels[status]}
+                                </option>
+                              ))}
+                            </select>
+                          </label>
+                          <p className="text-stone-600">品項數：{order.items.length}</p>
+                          <p className="text-stone-600">{order.createdAt}</p>
+                        </article>
+                      );
+                    })}
                   </div>
                 )}
               </section>
