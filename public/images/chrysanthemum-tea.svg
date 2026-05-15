@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">菊花養生茶 placeholder</title>
+  <desc id="desc">米白背景上的茶杯與菊花線條</desc>
+  <rect width="1200" height="900" fill="#f8f3ea"/>
+  <circle cx="600" cy="385" r="265" fill="#fffaf2" stroke="#d9c7a8" stroke-width="8"/>
+  <path d="M430 420h305v170c0 60-49 109-109 109h-87c-60 0-109-49-109-109V420z" fill="none" stroke="#234336" stroke-width="18" stroke-linejoin="round"/>
+  <path d="M735 465h55c42 0 42 78 0 78h-55" fill="none" stroke="#234336" stroke-width="16" stroke-linecap="round"/>
+  <path d="M500 355c-24-32 24-50 0-82M600 355c-24-32 24-50 0-82M700 355c-24-32 24-50 0-82" stroke="#7a5a2f" stroke-width="12" stroke-linecap="round"/>
+  <path d="M555 500l45-45 45 45-45 45z" fill="none" stroke="#c8a45d" stroke-width="12" stroke-linejoin="round"/>
+  <text x="600" y="790" text-anchor="middle" font-family="'Noto Serif TC', 'Microsoft JhengHei', serif" font-size="62" font-weight="700" fill="#234336">菊花養生茶</text>
+</svg>

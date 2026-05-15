@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">蟲草花雞湯 placeholder</title>
+  <desc id="desc">米白背景上的雞湯碗與草本線條</desc>
+  <rect width="1200" height="900" fill="#f8f3ea"/>
+  <rect x="230" y="155" width="740" height="565" rx="80" fill="#fffaf2" stroke="#d9c7a8" stroke-width="8"/>
+  <path d="M355 485c36 108 132 175 245 175s209-67 245-175H355z" fill="none" stroke="#234336" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M330 485h540" stroke="#234336" stroke-width="18" stroke-linecap="round"/>
+  <path d="M515 390c28-62 76-92 142-92" fill="none" stroke="#7a5a2f" stroke-width="12" stroke-linecap="round"/>
+  <path d="M560 358l-30-45M625 330l-12-55M690 308l24-48" stroke="#c8a45d" stroke-width="10" stroke-linecap="round"/>
+  <text x="600" y="790" text-anchor="middle" font-family="'Noto Serif TC', 'Microsoft JhengHei', serif" font-size="62" font-weight="700" fill="#234336">蟲草花雞湯</text>
+</svg>

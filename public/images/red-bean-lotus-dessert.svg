@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">紅豆蓮子糖水 placeholder</title>
+  <desc id="desc">溫潤風格的糖水碗與紅豆蓮子圖案</desc>
+  <rect width="1200" height="900" fill="#f8f3ea"/>
+  <rect x="220" y="160" width="760" height="560" rx="64" fill="#fffaf2" stroke="#d9c7a8" stroke-width="8"/>
+  <path d="M350 480c35 112 130 180 250 180s215-68 250-180H350z" fill="none" stroke="#234336" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M318 480h564" stroke="#234336" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="500" cy="390" r="18" fill="#7a5a2f"/>
+  <circle cx="570" cy="355" r="18" fill="#7a5a2f"/>
+  <circle cx="650" cy="390" r="18" fill="#7a5a2f"/>
+  <circle cx="720" cy="355" r="18" fill="#7a5a2f"/>
+  <ellipse cx="610" cy="430" rx="44" ry="26" fill="none" stroke="#c8a45d" stroke-width="12"/>
+  <text x="600" y="790" text-anchor="middle" font-family="'Noto Serif TC', 'Microsoft JhengHei', serif" font-size="60" font-weight="700" fill="#234336">紅豆蓮子糖水</text>
+</svg>
