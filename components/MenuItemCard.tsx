@@ -7,6 +7,14 @@ type MenuItemCardProps = {
   onAddToCart: (item: MenuItem) => void;
 };
 
+const seasonLabels: Record<MenuItem["season"], string> = {
+  spring: "春季",
+  summer: "夏季",
+  autumn: "秋季",
+  winter: "冬季",
+  allYear: "四季皆宜",
+};
+
 export function MenuItemCard({ item, onAddToCart }: MenuItemCardProps) {
   return (
     <article className="flex min-h-96 flex-col justify-between overflow-hidden rounded-lg border border-[#ddc9a5] bg-[#fffaf2] shadow-sm">
@@ -22,6 +30,9 @@ export function MenuItemCard({ item, onAddToCart }: MenuItemCardProps) {
         </div>
         <div className="p-5">
           <div className="mb-4 h-1 w-12 rounded-full bg-[#c8a45d]" />
+          <span className="mb-3 inline-flex rounded-full border border-[#d6bc82] bg-[#f8f3ea] px-3 py-1 text-xs font-medium text-[#7a5a2f]">
+            {seasonLabels[item.season]}
+          </span>
           <h2 className="text-xl font-semibold text-[#2f251d]">{item.name}</h2>
           <p className="mt-3 text-sm leading-6 text-[#6c5b49]">
             {item.description}
