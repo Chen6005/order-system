@@ -1,6 +1,7 @@
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, doc, onSnapshot, setDoc } from "firebase/firestore";
 
 import { db } from "./firebase";
+import { menuItems } from "./mock-data";
 import type { MenuItem } from "./types";
 
 const menuItemsCollection = "menuItems";
@@ -23,5 +24,13 @@ export function subscribeToMenuItems(
       callback(menuItems);
     },
     onError,
+  );
+}
+
+export async function seedMenuItems(): Promise<void> {
+  await Promise.all(
+    menuItems.map((item) =>
+      setDoc(doc(db, menuItemsCollection, item.id), item),
+    ),
   );
 }
