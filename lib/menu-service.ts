@@ -41,6 +41,10 @@ export async function seedMenuItems(): Promise<void> {
   );
 }
 
+export async function createMenuItem(item: MenuItem): Promise<void> {
+  await setDoc(doc(db, menuItemsCollection, item.id), item);
+}
+
 export async function updateMenuItemAvailability(
   menuItemId: string,
   available: boolean,
