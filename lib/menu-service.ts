@@ -51,3 +51,28 @@ export async function updateMenuItemAvailability(
 ): Promise<void> {
   await updateDoc(doc(db, menuItemsCollection, menuItemId), { available });
 }
+
+export async function updateMenuItem(
+  menuItemId: string,
+  updates: Partial<MenuItem>,
+): Promise<void> {
+  const {
+    available,
+    category,
+    description,
+    imageUrl,
+    name,
+    price,
+    season,
+  } = updates;
+
+  await updateDoc(doc(db, menuItemsCollection, menuItemId), {
+    ...(name !== undefined ? { name } : {}),
+    ...(description !== undefined ? { description } : {}),
+    ...(price !== undefined ? { price } : {}),
+    ...(category !== undefined ? { category } : {}),
+    ...(season !== undefined ? { season } : {}),
+    ...(imageUrl !== undefined ? { imageUrl } : {}),
+    ...(available !== undefined ? { available } : {}),
+  });
+}
