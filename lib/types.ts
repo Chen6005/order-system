@@ -4,12 +4,20 @@ export type MenuCategory =
   | "dessertSoup"
   | "teaDrink";
 
+export type Season =
+  | "spring"
+  | "summer"
+  | "autumn"
+  | "winter"
+  | "allYear";
+
 export type MenuItem = {
   id: string;
   name: string;
   description: string;
   price: number;
   category: MenuCategory;
+  season: Season;
   imageUrl: string;
   available: boolean;
 };
