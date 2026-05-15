@@ -32,7 +32,7 @@
 - 顧客首頁只顯示 `available === true` 且 `archived === false` 的商品。
 - menu management 已進入 CRUD 階段（目前已完成 Create / Read / Update 與 Soft Delete）。
 
-## Order Workflow Sections（本次更新）
+## Order Workflow Sections
 
 - Admin 訂單管理已分成三區：
   - 新訂單
@@ -41,8 +41,15 @@
 - 新訂單會進入「新訂單」區塊。
 - 狀態改為「製作中」後會移到「製作中」區塊。
 - 狀態改為「已完成」後會移到「已完成」區塊。
-- 本地驗證已通過。
-- Production 已部署完成。
+
+## Kitchen Attention Layer（本次更新）
+
+- 新訂單區塊已支援視覺提醒。
+- `pending > 0` 時顯示「待處理 X 筆」badge。
+- `pending = 0` 時顯示「目前沒有待處理訂單」。
+- 每筆訂單卡片已顯示等待時間。
+- 等待時間小於 1 分鐘顯示「剛剛建立」。
+- Production 已部署訂單等待時間顯示功能。
 
 ## Admin 與權限
 
