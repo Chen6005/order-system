@@ -78,6 +78,7 @@ export default function AdminMenuPage() {
   const [editForm, setEditForm] = useState<MenuFormState | null>(null);
   const [editSuccessMessage, setEditSuccessMessage] = useState("");
   const [editErrorMessage, setEditErrorMessage] = useState("");
+  const activeMenuItems = menuItems.filter((item) => !item.archived);
 
   const handleToggleAvailability = async (
     menuItemId: string,
@@ -109,6 +110,7 @@ export default function AdminMenuPage() {
       season: menuForm.season,
       imageUrl: menuForm.imageUrl,
       available: true,
+      archived: false,
     };
 
     try {
@@ -321,7 +323,7 @@ export default function AdminMenuPage() {
               </section>
             ) : (
               <div className="grid gap-4 md:grid-cols-2">
-                {menuItems.map((item) => {
+                {activeMenuItems.map((item) => {
                   const isEditing = editingItemId === item.id;
 
                   return (

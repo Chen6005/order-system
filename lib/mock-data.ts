@@ -10,6 +10,7 @@ export const menuItems: MenuItem[] = [
     season: "summer",
     imageUrl: "/images/four-season-ginseng-soup.svg",
     available: true,
+    archived: false,
   },
   {
     id: "lotus-root-peanut-soup",
@@ -20,6 +21,7 @@ export const menuItems: MenuItem[] = [
     season: "autumn",
     imageUrl: "/images/lotus-root-pork-soup.svg",
     available: true,
+    archived: false,
   },
   {
     id: "silkie-chicken-herbal-soup",
@@ -30,6 +32,7 @@ export const menuItems: MenuItem[] = [
     season: "winter",
     imageUrl: "/images/herbal-black-chicken-soup.svg",
     available: true,
+    archived: false,
   },
   {
     id: "cordyceps-flower-chicken-soup",
@@ -40,6 +43,7 @@ export const menuItems: MenuItem[] = [
     season: "allYear",
     imageUrl: "/images/cordyceps-chicken-soup.svg",
     available: true,
+    archived: false,
   },
   {
     id: "snow-fungus-papaya-dessert",
@@ -50,6 +54,7 @@ export const menuItems: MenuItem[] = [
     season: "spring",
     imageUrl: "/images/almond-walnut-dessert.svg",
     available: true,
+    archived: false,
   },
   {
     id: "black-sesame-walnut-dessert",
@@ -60,6 +65,7 @@ export const menuItems: MenuItem[] = [
     season: "allYear",
     imageUrl: "/images/red-bean-lotus-dessert.svg",
     available: true,
+    archived: false,
   },
   {
     id: "red-date-longan-tea",
@@ -70,6 +76,7 @@ export const menuItems: MenuItem[] = [
     season: "winter",
     imageUrl: "/images/chrysanthemum-tea.svg",
     available: true,
+    archived: false,
   },
   {
     id: "chrysanthemum-goji-tea",
@@ -80,5 +87,6 @@ export const menuItems: MenuItem[] = [
     season: "summer",
     imageUrl: "/images/luo-han-guo-tea.svg",
     available: true,
+    archived: false,
   },
 ];

@@ -20,6 +20,7 @@ export type MenuItem = {
   season: Season;
   imageUrl: string;
   available: boolean;
+  archived: boolean;
 };
 
 export type CartItem = {

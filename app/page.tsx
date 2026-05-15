@@ -49,7 +49,9 @@ export default function Home() {
     increaseQuantity,
     orderError,
   } = useOrderSystem(false);
-  const availableMenuItems = menuItems.filter((item) => item.available);
+  const availableMenuItems = menuItems.filter(
+    (item) => item.available && !item.archived,
+  );
   const recommendedItems = availableMenuItems
     .filter((item) => item.season === "autumn" || item.season === "allYear")
     .slice(0, 3);
