@@ -11,7 +11,10 @@
   - 養生糖水
   - 養生茶飲
 - 目前共有 8 個商品。
+- 商品資料已支援 `season` 欄位。
 - 商品卡已支援 SVG 圖片。
+- 本季推薦區塊已完成，目前推薦秋季與四季皆宜商品，最多顯示 3 個商品。
+- 季節篩選已完成，可切換全部、春季、夏季、秋季、冬季與四季皆宜。
 - 顧客可以將商品加入購物車。
 - 購物車會顯示商品數量、小計與總金額。
 - 顧客可以調整購物車內商品數量。
@@ -23,7 +26,7 @@
 - 訂單管理可以讀取 Firestore orders。
 - 訂單狀態更新會寫回 Firestore。
 - orders collection 已支援 realtime sync。
-- Vercel production 已部署並驗證成功。
+- Vercel production 已部署並完成產品化版本驗證。
 
 ## 目前資料狀態
 
@@ -32,6 +35,7 @@
 這表示：
 
 - 顧客送出的訂單會儲存在 Firestore `orders` collection。
+- Checkout 仍可正常寫入 Firestore。
 - Admin 登入後可從 Firestore 讀取訂單。
 - 訂單列表透過 Firestore realtime listener 即時同步。
 - 訂單狀態變更會寫回 Firestore，並同步到其他已開啟頁面。
