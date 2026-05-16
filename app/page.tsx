@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { CartSummary } from "@/components/CartSummary";
 import { MenuCategorySection } from "@/components/MenuCategorySection";
@@ -16,12 +16,14 @@ const categoryOrder: MenuCategory[] = [
   "dessertSoup",
   "teaDrink",
 ];
+
 const categoryLabels: Record<MenuCategory, string> = {
   seasonalSoup: "四季湯水",
   herbalSoup: "養生燉湯",
   dessertSoup: "養生糖水",
   teaDrink: "養生茶飲",
 };
+
 const seasonFilters: { label: string; value: SeasonFilter }[] = [
   { label: "全部", value: "all" },
   { label: "春季", value: "spring" },
@@ -31,13 +33,17 @@ const seasonFilters: { label: string; value: SeasonFilter }[] = [
   { label: "四季皆宜", value: "allYear" },
 ];
 
+const seasonalEntries: { label: string; season: Season; subtitle: string }[] = [
+  { label: "春季養生", season: "spring", subtitle: "舒展養氣" },
+  { label: "夏季清潤", season: "summer", subtitle: "清潤解暑" },
+  { label: "秋季滋補", season: "autumn", subtitle: "潤燥養陰" },
+  { label: "冬季暖身", season: "winter", subtitle: "溫補暖胃" },
+];
+
 export default function Home() {
   const [selectedSeason, setSelectedSeason] = useState<SeasonFilter>("all");
-  const {
-    isLoading: isMenuLoading,
-    menuError,
-    menuItems,
-  } = useMenuItems();
+  const menuSectionRef = useRef<HTMLDivElement | null>(null);
+  const { isLoading: isMenuLoading, menuError, menuItems } = useMenuItems();
   const {
     addToCart,
     cartCount,
@@ -49,6 +55,7 @@ export default function Home() {
     increaseQuantity,
     orderError,
   } = useOrderSystem(false);
+
   const availableMenuItems = menuItems.filter(
     (item) => item.available && !item.archived,
   );
@@ -60,15 +67,18 @@ export default function Home() {
       ? availableMenuItems
       : availableMenuItems.filter((item) => item.season === selectedSeason);
 
+  const handleSeasonEntryClick = (season: Season) => {
+    setSelectedSeason(season);
+    menuSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <main className="min-h-screen bg-[#f8f3ea] px-6 py-10 text-[#2f251d] sm:px-10 lg:px-16">
       <section className="mx-auto flex w-full max-w-5xl flex-col gap-10">
         <header className="border-b border-[#d9c7a8] pb-8">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
             <div className="max-w-2xl">
-              <p className="text-sm font-medium text-[#7a5a2f]">
-                廣東養生堂
-              </p>
+              <p className="text-sm font-medium text-[#7a5a2f]">廣東養生堂</p>
               <h1 className="mt-3 text-4xl font-semibold text-[#234336] sm:text-5xl">
                 四季湯水・養生糖水
               </h1>
@@ -81,6 +91,23 @@ export default function Home() {
             </div>
           </div>
         </header>
+
+        <section className="flex flex-col gap-3">
+          <h2 className="text-lg font-semibold text-[#234336]">四季養生入口</h2>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {seasonalEntries.map((entry) => (
+              <button
+                className="rounded-md border border-[#d6bc82] bg-[#fffaf0] px-4 py-4 text-left transition hover:border-[#b69258] hover:bg-[#f6ecd9]"
+                key={entry.season}
+                onClick={() => handleSeasonEntryClick(entry.season)}
+                type="button"
+              >
+                <p className="text-base font-semibold text-[#234336]">{entry.label}</p>
+                <p className="mt-1 text-sm text-[#7a5a2f]">{entry.subtitle}</p>
+              </button>
+            ))}
+          </div>
+        </section>
 
         <CartSummary
           cartItems={cartItems}
@@ -101,11 +128,9 @@ export default function Home() {
             菜單讀取失敗
           </section>
         ) : (
-          <>
+          <div className="flex flex-col gap-8" ref={menuSectionRef}>
             <section className="flex flex-col gap-3">
-              <h2 className="text-lg font-semibold text-[#234336]">
-                依季節篩選
-              </h2>
+              <h2 className="text-lg font-semibold text-[#234336]">依季節篩選</h2>
               <div className="flex flex-wrap gap-2">
                 {seasonFilters.map((filter) => {
                   const isSelected = selectedSeason === filter.value;
@@ -154,7 +179,7 @@ export default function Home() {
                 );
               })}
             </div>
-          </>
+          </div>
         )}
       </section>
     </main>
