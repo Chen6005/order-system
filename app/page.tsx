@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { CartSummary } from "@/components/CartSummary";
 import { MenuCategorySection } from "@/components/MenuCategorySection";
+import { MenuLoadingSkeleton } from "@/components/MenuLoadingSkeleton";
 import { useMenuItems } from "@/hooks/useMenuItems";
 import { useOrderSystem } from "@/hooks/useOrderSystem";
 import type { MenuCategory, Season } from "@/lib/types";
@@ -192,9 +193,7 @@ export default function Home() {
 
         <div className="flex flex-col gap-8" ref={menuSectionRef}>
           {isMenuLoading ? (
-            <section className="rounded-lg border border-[#d9c7a8] bg-[#fffaf0] p-5 text-sm font-medium text-[#6c5b49] shadow-sm">
-              菜單載入中...
-            </section>
+            <MenuLoadingSkeleton />
           ) : menuError ? (
             <section className="rounded-lg border border-red-200 bg-red-50 p-5 text-sm font-medium text-red-700 shadow-sm">
               菜單讀取失敗
