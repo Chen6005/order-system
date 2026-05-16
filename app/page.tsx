@@ -106,6 +106,7 @@ export default function Home() {
     cartTotal,
     checkout,
     checkoutSuccess,
+    dismissCheckoutSuccess,
     decreaseQuantity,
     increaseQuantity,
     orderError,
@@ -147,6 +148,11 @@ export default function Home() {
   const handleSeasonEntryClick = (season: Season) => {
     setSelectedSeason(season);
     menuSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const handleCloseOrderSuccess = () => {
+    setIsOrderSuccessOpen(false);
+    dismissCheckoutSuccess();
   };
 
   return (
@@ -377,7 +383,7 @@ export default function Home() {
           className={`absolute inset-0 bg-[#2f251d]/35 transition-opacity ${
             isOrderSuccessOpen ? "opacity-100" : "opacity-0"
           }`}
-          onClick={() => setIsOrderSuccessOpen(false)}
+          onClick={handleCloseOrderSuccess}
           type="button"
         />
         <section
@@ -401,7 +407,7 @@ export default function Home() {
           </p>
           <button
             className="mt-5 w-full rounded-full bg-[#234336] px-4 py-3 text-sm font-semibold text-[#fffaf0] transition hover:bg-[#1b342a] active:scale-[0.98]"
-            onClick={() => setIsOrderSuccessOpen(false)}
+            onClick={handleCloseOrderSuccess}
             type="button"
           >
             關閉

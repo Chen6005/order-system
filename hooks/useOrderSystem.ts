@@ -120,6 +120,10 @@ export function useOrderSystem(isAdminAuthenticated: boolean) {
     }
   }
 
+  function dismissCheckoutSuccess() {
+    setCheckoutSuccess(false);
+  }
+
   return {
     addToCart,
     cartCount,
@@ -127,6 +131,7 @@ export function useOrderSystem(isAdminAuthenticated: boolean) {
     cartTotal,
     checkout,
     checkoutSuccess,
+    dismissCheckoutSuccess,
     decreaseQuantity,
     increaseQuantity,
     orderError,
