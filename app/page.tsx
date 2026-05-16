@@ -31,6 +31,32 @@ const seasonalEntries: { label: string; season: Season; subtitle: string }[] = [
   { label: "冬季暖身", season: "winter", subtitle: "溫補暖胃" },
 ];
 
+const seasonalSectionContent: Record<
+  Season,
+  { title: string; description: string }
+> = {
+  spring: {
+    title: "春季養生",
+    description: "舒展養氣，適合換季調理",
+  },
+  summer: {
+    title: "夏季清潤",
+    description: "清潤解暑，減少燥熱負擔",
+  },
+  autumn: {
+    title: "秋季滋補",
+    description: "潤燥養身，溫和調理日常",
+  },
+  winter: {
+    title: "冬季暖身",
+    description: "暖胃補氣，適合寒冷季節",
+  },
+  allYear: {
+    title: "四季皆宜",
+    description: "溫和平衡，日常都能安心享用",
+  },
+};
+
 export default function Home() {
   const [selectedSeason, setSelectedSeason] = useState<SeasonFilter>("all");
   const menuSectionRef = useRef<HTMLDivElement | null>(null);
@@ -121,6 +147,17 @@ export default function Home() {
             </section>
           ) : (
             <>
+              {selectedSeason !== "all" ? (
+                <section className="rounded-lg border border-[#d6bc82] bg-[#fffaf0] px-5 py-4 shadow-sm">
+                  <p className="text-base font-semibold text-[#234336]">
+                    {seasonalSectionContent[selectedSeason].title}
+                  </p>
+                  <p className="mt-1 text-sm text-[#7a5a2f]">
+                    {seasonalSectionContent[selectedSeason].description}
+                  </p>
+                </section>
+              ) : null}
+
               <section className="flex items-center justify-between gap-3">
                 <h2 className="text-lg font-semibold text-[#234336]">菜單區</h2>
                 {selectedSeason !== "all" ? (
