@@ -5,6 +5,9 @@ import type { MenuItem } from "@/lib/types";
 type MenuItemCardProps = {
   item: MenuItem;
   onAddToCart: (item: MenuItem) => void;
+  quantityInCart: number;
+  onIncrease: (menuItemId: string) => void;
+  onDecrease: (menuItemId: string) => void;
 };
 
 const seasonLabels: Record<MenuItem["season"], string> = {
@@ -15,7 +18,13 @@ const seasonLabels: Record<MenuItem["season"], string> = {
   allYear: "四季皆宜",
 };
 
-export function MenuItemCard({ item, onAddToCart }: MenuItemCardProps) {
+export function MenuItemCard({
+  item,
+  onAddToCart,
+  quantityInCart,
+  onIncrease,
+  onDecrease,
+}: MenuItemCardProps) {
   return (
     <article className="flex min-h-96 flex-col justify-between overflow-hidden rounded-lg border border-[#ddc9a5] bg-[#fffaf2] shadow-sm">
       <div>
@@ -43,13 +52,37 @@ export function MenuItemCard({ item, onAddToCart }: MenuItemCardProps) {
         <p className="text-lg font-semibold text-[#234336]">
           NT${item.price}
         </p>
-        <button
-          className="rounded-full bg-[#234336] px-4 py-2 text-sm font-medium text-[#fffaf0] transition-colors hover:bg-[#1b342a]"
-          onClick={() => onAddToCart(item)}
-          type="button"
-        >
-          加入購物車
-        </button>
+        {quantityInCart > 0 ? (
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#d6bc82] bg-[#fffaf0] p-1">
+            <button
+              aria-label={`減少 ${item.name} 數量`}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#d6bc82] text-lg font-semibold text-[#234336] transition-colors hover:bg-[#efe4d0] active:scale-[0.98]"
+              onClick={() => onDecrease(item.id)}
+              type="button"
+            >
+              -
+            </button>
+            <span className="min-w-8 text-center text-base font-semibold text-[#234336]">
+              {quantityInCart}
+            </span>
+            <button
+              aria-label={`增加 ${item.name} 數量`}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#234336] text-lg font-semibold text-[#fffaf0] transition-colors hover:bg-[#1b342a] active:scale-[0.98]"
+              onClick={() => onIncrease(item.id)}
+              type="button"
+            >
+              +
+            </button>
+          </div>
+        ) : (
+          <button
+            className="rounded-full bg-[#234336] px-4 py-2.5 text-sm font-medium text-[#fffaf0] transition-colors hover:bg-[#1b342a] active:scale-[0.98]"
+            onClick={() => onAddToCart(item)}
+            type="button"
+          >
+            加入購物車
+          </button>
+        )}
       </div>
     </article>
   );

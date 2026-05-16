@@ -219,8 +219,11 @@ export default function Home() {
               </section>
 
               <MenuCategorySection
+                cartItems={cartItems}
                 items={recommendedItems}
                 onAddToCart={addToCart}
+                onDecreaseQuantity={decreaseQuantity}
+                onIncreaseQuantity={increaseQuantity}
                 title="本季推薦"
               />
 
@@ -236,9 +239,12 @@ export default function Home() {
 
                   return (
                     <MenuCategorySection
+                      cartItems={cartItems}
                       items={categoryItems}
                       key={category}
                       onAddToCart={addToCart}
+                      onDecreaseQuantity={decreaseQuantity}
+                      onIncreaseQuantity={increaseQuantity}
                       title={categoryLabels[category]}
                     />
                   );

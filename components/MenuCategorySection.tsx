@@ -1,16 +1,22 @@
 import { MenuItemCard } from "@/components/MenuItemCard";
-import type { MenuItem } from "@/lib/types";
+import type { CartItem, MenuItem } from "@/lib/types";
 
 type MenuCategorySectionProps = {
   title: string;
   items: MenuItem[];
+  cartItems: CartItem[];
   onAddToCart: (item: MenuItem) => void;
+  onIncreaseQuantity: (menuItemId: string) => void;
+  onDecreaseQuantity: (menuItemId: string) => void;
 };
 
 export function MenuCategorySection({
   title,
   items,
+  cartItems,
   onAddToCart,
+  onIncreaseQuantity,
+  onDecreaseQuantity,
 }: MenuCategorySectionProps) {
   return (
     <section className="flex flex-col gap-4">
@@ -24,6 +30,12 @@ export function MenuCategorySection({
             item={item}
             key={item.id}
             onAddToCart={onAddToCart}
+            onDecrease={onDecreaseQuantity}
+            onIncrease={onIncreaseQuantity}
+            quantityInCart={
+              cartItems.find((cartItem) => cartItem.menuItemId === item.id)
+                ?.quantity ?? 0
+            }
           />
         ))}
       </div>
