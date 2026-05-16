@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from "react";
+
 import Image from "next/image";
 
 import type { MenuItem } from "@/lib/types";
@@ -25,6 +27,20 @@ export function MenuItemCard({
   onIncrease,
   onDecrease,
 }: MenuItemCardProps) {
+  const [isQuantityAnimating, setIsQuantityAnimating] = useState(false);
+  const previousQuantityRef = useRef(quantityInCart);
+
+  useEffect(() => {
+    if (quantityInCart !== previousQuantityRef.current) {
+      setIsQuantityAnimating(true);
+      const timer = setTimeout(() => setIsQuantityAnimating(false), 180);
+      previousQuantityRef.current = quantityInCart;
+      return () => clearTimeout(timer);
+    }
+
+    return undefined;
+  }, [quantityInCart]);
+
   return (
     <article className="flex min-h-96 flex-col justify-between overflow-hidden rounded-lg border border-[#ddc9a5] bg-[#fffaf2] shadow-sm">
       <div>
@@ -56,18 +72,20 @@ export function MenuItemCard({
           <div className="inline-flex items-center gap-2 rounded-full border border-[#d6bc82] bg-[#fffaf0] p-1">
             <button
               aria-label={`減少 ${item.name} 數量`}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#d6bc82] text-lg font-semibold text-[#234336] transition-colors hover:bg-[#efe4d0] active:scale-[0.98]"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#d6bc82] text-lg font-semibold text-[#234336] transition duration-150 hover:bg-[#efe4d0] active:scale-[0.95]"
               onClick={() => onDecrease(item.id)}
               type="button"
             >
               -
             </button>
-            <span className="min-w-8 text-center text-base font-semibold text-[#234336]">
+            <span
+              className={`min-w-8 text-center text-base font-semibold text-[#234336] ${isQuantityAnimating ? "cart-qty-fade" : ""}`}
+            >
               {quantityInCart}
             </span>
             <button
               aria-label={`增加 ${item.name} 數量`}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#234336] text-lg font-semibold text-[#fffaf0] transition-colors hover:bg-[#1b342a] active:scale-[0.98]"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#234336] text-lg font-semibold text-[#fffaf0] transition duration-150 hover:bg-[#1b342a] active:scale-[0.95]"
               onClick={() => onIncrease(item.id)}
               type="button"
             >
@@ -76,7 +94,7 @@ export function MenuItemCard({
           </div>
         ) : (
           <button
-            className="rounded-full bg-[#234336] px-4 py-2.5 text-sm font-medium text-[#fffaf0] transition-colors hover:bg-[#1b342a] active:scale-[0.98]"
+            className="rounded-full bg-[#234336] px-4 py-2.5 text-sm font-medium text-[#fffaf0] transition duration-150 hover:bg-[#1b342a] active:scale-[0.95]"
             onClick={() => onAddToCart(item)}
             type="button"
           >

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { CartSummary } from "@/components/CartSummary";
 import { MenuCategorySection } from "@/components/MenuCategorySection";
@@ -87,6 +87,7 @@ const seasonalSectionContent: Record<
 export default function Home() {
   const [selectedSeason, setSelectedSeason] = useState<SeasonFilter>("all");
   const [isMobileCartOpen, setIsMobileCartOpen] = useState(false);
+  const [isCartBarHighlighting, setIsCartBarHighlighting] = useState(false);
   const menuSectionRef = useRef<HTMLDivElement | null>(null);
   const { isLoading: isMenuLoading, menuError, menuItems } = useMenuItems();
   const {
@@ -100,6 +101,7 @@ export default function Home() {
     increaseQuantity,
     orderError,
   } = useOrderSystem(false);
+  const previousCartCountRef = useRef(cartCount);
 
   const availableMenuItems = menuItems.filter(
     (item) => item.available && !item.archived,
@@ -111,6 +113,18 @@ export default function Home() {
     selectedSeason === "all"
       ? availableMenuItems
       : availableMenuItems.filter((item) => item.season === selectedSeason);
+
+  useEffect(() => {
+    if (cartCount > previousCartCountRef.current) {
+      setIsCartBarHighlighting(true);
+      const timer = setTimeout(() => setIsCartBarHighlighting(false), 260);
+      previousCartCountRef.current = cartCount;
+      return () => clearTimeout(timer);
+    }
+
+    previousCartCountRef.current = cartCount;
+    return undefined;
+  }, [cartCount]);
 
   const handleSeasonEntryClick = (season: Season) => {
     setSelectedSeason(season);
@@ -252,7 +266,9 @@ export default function Home() {
       </section>
 
       {cartItems.length > 0 ? (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#d6bc82] bg-[#fffaf0]/95 px-4 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] pt-3 shadow-[0_-8px_24px_rgba(35,67,54,0.12)] backdrop-blur sm:hidden">
+        <div
+          className={`fixed inset-x-0 bottom-0 z-40 border-t border-[#d6bc82] bg-[#fffaf0]/95 px-4 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] pt-3 shadow-[0_-8px_24px_rgba(35,67,54,0.12)] backdrop-blur transition sm:hidden ${isCartBarHighlighting ? "cart-bar-pulse" : ""}`}
+        >
           <div className="mx-auto flex w-full max-w-5xl items-center gap-3">
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold text-[#234336]">🛒 {cartCount} 件商品</p>
