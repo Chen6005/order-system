@@ -87,6 +87,7 @@ const seasonalSectionContent: Record<
 export default function Home() {
   const [selectedSeason, setSelectedSeason] = useState<SeasonFilter>("all");
   const menuSectionRef = useRef<HTMLDivElement | null>(null);
+  const cartSectionRef = useRef<HTMLDivElement | null>(null);
   const { isLoading: isMenuLoading, menuError, menuItems } = useMenuItems();
   const {
     addToCart,
@@ -116,8 +117,12 @@ export default function Home() {
     menuSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  const handleScrollToCart = () => {
+    cartSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
-    <main className="min-h-screen bg-[#f8f3ea] px-6 py-10 text-[#2f251d] sm:px-10 lg:px-16">
+    <main className="min-h-screen bg-[#f8f3ea] px-6 pb-28 pt-10 text-[#2f251d] sm:px-10 sm:pb-10 lg:px-16">
       <section className="mx-auto flex w-full max-w-5xl flex-col gap-10">
         <header className="border-b border-[#d9c7a8] pb-8">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
@@ -153,15 +158,17 @@ export default function Home() {
           </div>
         </section>
 
-        <CartSummary
-          cartItems={cartItems}
-          checkoutSuccess={checkoutSuccess}
-          onCheckout={checkout}
-          onDecrease={decreaseQuantity}
-          onIncrease={increaseQuantity}
-          orderError={orderError}
-          total={cartTotal}
-        />
+        <div ref={cartSectionRef}>
+          <CartSummary
+            cartItems={cartItems}
+            checkoutSuccess={checkoutSuccess}
+            onCheckout={checkout}
+            onDecrease={decreaseQuantity}
+            onIncrease={increaseQuantity}
+            orderError={orderError}
+            total={cartTotal}
+          />
+        </div>
 
         <div className="flex flex-col gap-8" ref={menuSectionRef}>
           {isMenuLoading ? (
@@ -241,6 +248,24 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      {cartItems.length > 0 ? (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#d6bc82] bg-[#fffaf0]/95 px-4 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] pt-3 shadow-[0_-8px_24px_rgba(35,67,54,0.12)] backdrop-blur sm:hidden">
+          <div className="mx-auto flex w-full max-w-5xl items-center gap-3">
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-semibold text-[#234336]">🛒 {cartCount} 件商品</p>
+              <p className="text-sm text-[#7a5a2f]">總金額 NT$ {cartTotal}</p>
+            </div>
+            <button
+              className="rounded-full bg-[#234336] px-5 py-3 text-sm font-semibold text-[#fffaf0] transition active:scale-[0.98]"
+              onClick={handleScrollToCart}
+              type="button"
+            >
+              查看購物車
+            </button>
+          </div>
+        </div>
+      ) : null}
     </main>
   );
 }
