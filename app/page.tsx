@@ -33,27 +33,54 @@ const seasonalEntries: { label: string; season: Season; subtitle: string }[] = [
 
 const seasonalSectionContent: Record<
   Season,
-  { title: string; description: string }
+  {
+    title: string;
+    description: string;
+    icon: string;
+    containerClass: string;
+    titleClass: string;
+    descriptionClass: string;
+  }
 > = {
   spring: {
     title: "春季養生",
     description: "舒展養氣，適合換季調理",
+    icon: "🌿",
+    containerClass: "border-[#b8d9b0] bg-[#f2fbef]",
+    titleClass: "text-[#2f5f3e]",
+    descriptionClass: "text-[#4f7659]",
   },
   summer: {
     title: "夏季清潤",
     description: "清潤解暑，減少燥熱負擔",
+    icon: "💧",
+    containerClass: "border-[#b8d8ef] bg-[#eef8ff]",
+    titleClass: "text-[#245577]",
+    descriptionClass: "text-[#3d6f8e]",
   },
   autumn: {
     title: "秋季滋補",
     description: "潤燥養身，溫和調理日常",
+    icon: "🍂",
+    containerClass: "border-[#e2c48f] bg-[#fff6ea]",
+    titleClass: "text-[#79572d]",
+    descriptionClass: "text-[#946d3d]",
   },
   winter: {
     title: "冬季暖身",
     description: "暖胃補氣，適合寒冷季節",
+    icon: "🔥",
+    containerClass: "border-[#d8c8b4] bg-[#fbf5ee]",
+    titleClass: "text-[#634732]",
+    descriptionClass: "text-[#7c5f46]",
   },
   allYear: {
     title: "四季皆宜",
     description: "溫和平衡，日常都能安心享用",
+    icon: "🌿",
+    containerClass: "border-[#d6bc82] bg-[#fffaf0]",
+    titleClass: "text-[#234336]",
+    descriptionClass: "text-[#7a5a2f]",
   },
 };
 
@@ -148,13 +175,26 @@ export default function Home() {
           ) : (
             <>
               {selectedSeason !== "all" ? (
-                <section className="rounded-lg border border-[#d6bc82] bg-[#fffaf0] px-5 py-4 shadow-sm">
-                  <p className="text-base font-semibold text-[#234336]">
-                    {seasonalSectionContent[selectedSeason].title}
-                  </p>
-                  <p className="mt-1 text-sm text-[#7a5a2f]">
-                    {seasonalSectionContent[selectedSeason].description}
-                  </p>
+                <section
+                  className={`rounded-lg border px-5 py-4 shadow-sm ${seasonalSectionContent[selectedSeason].containerClass}`}
+                >
+                  <div className="flex items-start gap-3">
+                    <span className="text-lg leading-none" role="img">
+                      {seasonalSectionContent[selectedSeason].icon}
+                    </span>
+                    <div>
+                      <p
+                        className={`text-base font-semibold ${seasonalSectionContent[selectedSeason].titleClass}`}
+                      >
+                        {seasonalSectionContent[selectedSeason].title}
+                      </p>
+                      <p
+                        className={`mt-1 text-sm ${seasonalSectionContent[selectedSeason].descriptionClass}`}
+                      >
+                        {seasonalSectionContent[selectedSeason].description}
+                      </p>
+                    </div>
+                  </div>
                 </section>
               ) : null}
 
