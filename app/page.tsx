@@ -24,15 +24,6 @@ const categoryLabels: Record<MenuCategory, string> = {
   teaDrink: "養生茶飲",
 };
 
-const seasonFilters: { label: string; value: SeasonFilter }[] = [
-  { label: "全部", value: "all" },
-  { label: "春季", value: "spring" },
-  { label: "夏季", value: "summer" },
-  { label: "秋季", value: "autumn" },
-  { label: "冬季", value: "winter" },
-  { label: "四季皆宜", value: "allYear" },
-];
-
 const seasonalEntries: { label: string; season: Season; subtitle: string }[] = [
   { label: "春季養生", season: "spring", subtitle: "舒展養氣" },
   { label: "夏季清潤", season: "summer", subtitle: "清潤解暑" },
@@ -130,28 +121,17 @@ export default function Home() {
             </section>
           ) : (
             <>
-              <section className="flex flex-col gap-3">
-                <h2 className="text-lg font-semibold text-[#234336]">依季節篩選</h2>
-                <div className="flex flex-wrap gap-2">
-                  {seasonFilters.map((filter) => {
-                    const isSelected = selectedSeason === filter.value;
-
-                    return (
-                      <button
-                        className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
-                          isSelected
-                            ? "border-[#234336] bg-[#234336] text-[#fffaf0]"
-                            : "border-[#d6bc82] bg-[#fffaf0] text-[#7a5a2f] hover:bg-[#efe4d0]"
-                        }`}
-                        key={filter.value}
-                        onClick={() => setSelectedSeason(filter.value)}
-                        type="button"
-                      >
-                        {filter.label}
-                      </button>
-                    );
-                  })}
-                </div>
+              <section className="flex items-center justify-between gap-3">
+                <h2 className="text-lg font-semibold text-[#234336]">菜單區</h2>
+                {selectedSeason !== "all" ? (
+                  <button
+                    className="rounded-full border border-[#d6bc82] bg-[#fffaf0] px-4 py-2 text-sm font-medium text-[#7a5a2f] transition hover:bg-[#efe4d0]"
+                    onClick={() => setSelectedSeason("all")}
+                    type="button"
+                  >
+                    顯示全部湯水
+                  </button>
+                ) : null}
               </section>
 
               <MenuCategorySection
