@@ -10,7 +10,19 @@
   - 養生糖水
   - 養生茶飲
 - 商品已支援 `season` 欄位與 SVG 圖片。
-- 本季推薦與季節篩選功能已完成。
+- 四季入口導航已完成。
+- 季節模式已調整為直接顯示對應季節商品，不顯示本季推薦。
+- 點擊「顯示全部湯水」可回到完整菜單與本季推薦。
+
+## Mobile Ordering UX
+
+- Mobile Sticky Cart Bar 已完成。
+- Mobile Cart Bottom Sheet 已完成。
+- Quick Add Ordering Flow 已完成。
+- Add-to-Cart Micro Interaction Layer 已完成。
+- Order Success Experience 已完成。
+- Menu Loading Skeleton 已完成。
+- Production 已部署目前手機點餐 UX 版本。
 
 ## Firestore 與資料流
 
