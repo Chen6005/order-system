@@ -92,6 +92,17 @@ const seasonalSectionContent: Record<
   },
 };
 
+const orderStatusLabels: Record<
+  "new" | "preparing" | "ready" | "completed" | "cancelled",
+  string
+> = {
+  new: "已收到訂單",
+  preparing: "製作中",
+  ready: "可取餐",
+  completed: "已完成",
+  cancelled: "已取消",
+};
+
 export default function Home() {
   const [selectedSeason, setSelectedSeason] = useState<SeasonFilter>("all");
   const [isMobileCartOpen, setIsMobileCartOpen] = useState(false);
@@ -109,7 +120,11 @@ export default function Home() {
     dismissCheckoutSuccess,
     decreaseQuantity,
     increaseQuantity,
+    isTrackingOrder,
+    latestOrder,
+    latestOrderId,
     orderError,
+    orderTrackingError,
   } = useOrderSystem(false);
   const previousCartCountRef = useRef(cartCount);
 
@@ -123,6 +138,12 @@ export default function Home() {
     selectedSeason === "all"
       ? availableMenuItems
       : availableMenuItems.filter((item) => item.season === selectedSeason);
+  const latestOrderItemCount = latestOrder
+    ? latestOrder.items.reduce((total, item) => total + item.quantity, 0)
+    : 0;
+  const latestOrderCreatedAt = latestOrder
+    ? new Date(latestOrder.createdAt).toLocaleString("zh-TW")
+    : "";
 
   useEffect(() => {
     if (cartCount > previousCartCountRef.current) {
@@ -191,6 +212,46 @@ export default function Home() {
             ))}
           </div>
         </section>
+
+        {latestOrderId ? (
+          <section className="rounded-xl border border-[#d9c7a8] bg-[#fffaf0] p-4 shadow-sm">
+            <div className="mb-2 flex items-center justify-between gap-3">
+              <h2 className="text-base font-semibold text-[#234336]">我的訂單狀態</h2>
+              {latestOrder ? (
+                <span className="rounded-full bg-[#edf5eb] px-3 py-1 text-xs font-medium text-[#234336]">
+                  {orderStatusLabels[latestOrder.status]}
+                </span>
+              ) : null}
+            </div>
+
+            {isTrackingOrder ? (
+              <p className="text-sm text-[#6c5b49]">正在確認您的訂單狀態...</p>
+            ) : orderTrackingError ? (
+              <p className="text-sm text-[#6c5b49]">暫時無法讀取訂單狀態</p>
+            ) : latestOrder ? (
+              <div className="flex flex-col gap-2 text-sm text-[#6c5b49]">
+                <p>
+                  訂單編號
+                  <span className="ml-2 font-medium text-[#2f251d]">{latestOrder.id}</span>
+                </p>
+                <p>
+                  商品數量
+                  <span className="ml-2 font-medium text-[#2f251d]">
+                    {latestOrderItemCount} 件
+                  </span>
+                </p>
+                <p>
+                  建立時間
+                  <span className="ml-2 font-medium text-[#2f251d]">
+                    {latestOrderCreatedAt}
+                  </span>
+                </p>
+              </div>
+            ) : (
+              <p className="text-sm text-[#6c5b49]">暫時無法讀取訂單狀態</p>
+            )}
+          </section>
+        ) : null}
 
         <div className="hidden sm:block">
           <CartSummary
