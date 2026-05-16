@@ -88,7 +88,7 @@ export function useOrderSystem(isAdminAuthenticated: boolean) {
 
   async function checkout() {
     if (cartItems.length === 0) {
-      return;
+      return false;
     }
 
     setOrderError("");
@@ -104,9 +104,11 @@ export function useOrderSystem(isAdminAuthenticated: boolean) {
       await createOrder(newOrder);
       setCheckoutSuccess(true);
       setCartItems([]);
+      return true;
     } catch {
       setCheckoutSuccess(false);
       setOrderError("訂單送出失敗，請稍後再試。");
+      return false;
     }
   }
 

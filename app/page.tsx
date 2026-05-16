@@ -88,6 +88,7 @@ export default function Home() {
   const [selectedSeason, setSelectedSeason] = useState<SeasonFilter>("all");
   const [isMobileCartOpen, setIsMobileCartOpen] = useState(false);
   const [isCartBarHighlighting, setIsCartBarHighlighting] = useState(false);
+  const [isOrderSuccessOpen, setIsOrderSuccessOpen] = useState(false);
   const menuSectionRef = useRef<HTMLDivElement | null>(null);
   const { isLoading: isMenuLoading, menuError, menuItems } = useMenuItems();
   const {
@@ -125,6 +126,15 @@ export default function Home() {
     previousCartCountRef.current = cartCount;
     return undefined;
   }, [cartCount]);
+
+  const handleCheckout = async () => {
+    const isSuccess = await checkout();
+
+    if (isSuccess) {
+      setIsOrderSuccessOpen(true);
+      setIsMobileCartOpen(false);
+    }
+  };
 
   const handleSeasonEntryClick = (season: Season) => {
     setSelectedSeason(season);
@@ -172,7 +182,7 @@ export default function Home() {
           <CartSummary
             cartItems={cartItems}
             checkoutSuccess={checkoutSuccess}
-            onCheckout={checkout}
+            onCheckout={handleCheckout}
             onDecrease={decreaseQuantity}
             onIncrease={increaseQuantity}
             orderError={orderError}
@@ -318,7 +328,7 @@ export default function Home() {
             <CartSummary
               cartItems={cartItems}
               checkoutSuccess={checkoutSuccess}
-              onCheckout={checkout}
+              onCheckout={handleCheckout}
               onDecrease={decreaseQuantity}
               onIncrease={increaseQuantity}
               orderError={orderError}
@@ -327,6 +337,49 @@ export default function Home() {
           </section>
         </div>
       ) : null}
+
+      <div
+        aria-hidden={!isOrderSuccessOpen}
+        className={`fixed inset-0 z-[60] transition ${
+          isOrderSuccessOpen ? "pointer-events-auto" : "pointer-events-none"
+        }`}
+      >
+        <button
+          aria-label="關閉成功提示"
+          className={`absolute inset-0 bg-[#2f251d]/35 transition-opacity ${
+            isOrderSuccessOpen ? "opacity-100" : "opacity-0"
+          }`}
+          onClick={() => setIsOrderSuccessOpen(false)}
+          type="button"
+        />
+        <section
+          className={`absolute inset-x-0 bottom-0 rounded-t-2xl border border-[#d6bc82] bg-[#fffaf0] px-5 pb-[calc(env(safe-area-inset-bottom)+1.25rem)] pt-5 shadow-2xl transition-transform duration-300 sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:w-full sm:max-w-md sm:-translate-x-1/2 sm:rounded-2xl sm:pb-6 ${
+            isOrderSuccessOpen
+              ? "translate-y-0 sm:-translate-y-1/2"
+              : "translate-y-full sm:-translate-y-[42%]"
+          }`}
+        >
+          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-[#edf5eb] text-xl text-[#234336]">
+            ✓
+          </div>
+          <h2 className="text-center text-xl font-semibold text-[#234336]">
+            訂單已送出
+          </h2>
+          <p className="mt-2 text-center text-sm text-[#6c5b49]">
+            廚房已開始準備您的養生湯品
+          </p>
+          <p className="mt-3 text-center text-sm leading-6 text-[#7a5a2f]">
+            感謝您的點餐，願您今天也暖暖地照顧好自己。
+          </p>
+          <button
+            className="mt-5 w-full rounded-full bg-[#234336] px-4 py-3 text-sm font-semibold text-[#fffaf0] transition hover:bg-[#1b342a] active:scale-[0.98]"
+            onClick={() => setIsOrderSuccessOpen(false)}
+            type="button"
+          >
+            關閉
+          </button>
+        </section>
+      </div>
     </main>
   );
 }

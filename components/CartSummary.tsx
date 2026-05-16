@@ -5,7 +5,7 @@ type CartSummaryProps = {
   total: number;
   onIncrease: (menuItemId: string) => void;
   onDecrease: (menuItemId: string) => void;
-  onCheckout: () => void;
+  onCheckout: () => void | Promise<void>;
   checkoutSuccess: boolean;
   orderError: string;
 };
