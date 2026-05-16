@@ -119,68 +119,70 @@ export default function Home() {
           total={cartTotal}
         />
 
-        {isMenuLoading ? (
-          <section className="rounded-lg border border-[#d9c7a8] bg-[#fffaf0] p-5 text-sm font-medium text-[#6c5b49] shadow-sm">
-            菜單載入中...
-          </section>
-        ) : menuError ? (
-          <section className="rounded-lg border border-red-200 bg-red-50 p-5 text-sm font-medium text-red-700 shadow-sm">
-            菜單讀取失敗
-          </section>
-        ) : (
-          <div className="flex flex-col gap-8" ref={menuSectionRef}>
-            <section className="flex flex-col gap-3">
-              <h2 className="text-lg font-semibold text-[#234336]">依季節篩選</h2>
-              <div className="flex flex-wrap gap-2">
-                {seasonFilters.map((filter) => {
-                  const isSelected = selectedSeason === filter.value;
+        <div className="flex flex-col gap-8" ref={menuSectionRef}>
+          {isMenuLoading ? (
+            <section className="rounded-lg border border-[#d9c7a8] bg-[#fffaf0] p-5 text-sm font-medium text-[#6c5b49] shadow-sm">
+              菜單載入中...
+            </section>
+          ) : menuError ? (
+            <section className="rounded-lg border border-red-200 bg-red-50 p-5 text-sm font-medium text-red-700 shadow-sm">
+              菜單讀取失敗
+            </section>
+          ) : (
+            <>
+              <section className="flex flex-col gap-3">
+                <h2 className="text-lg font-semibold text-[#234336]">依季節篩選</h2>
+                <div className="flex flex-wrap gap-2">
+                  {seasonFilters.map((filter) => {
+                    const isSelected = selectedSeason === filter.value;
+
+                    return (
+                      <button
+                        className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                          isSelected
+                            ? "border-[#234336] bg-[#234336] text-[#fffaf0]"
+                            : "border-[#d6bc82] bg-[#fffaf0] text-[#7a5a2f] hover:bg-[#efe4d0]"
+                        }`}
+                        key={filter.value}
+                        onClick={() => setSelectedSeason(filter.value)}
+                        type="button"
+                      >
+                        {filter.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </section>
+
+              <MenuCategorySection
+                items={recommendedItems}
+                onAddToCart={addToCart}
+                title="本季推薦"
+              />
+
+              <div className="flex flex-col gap-8">
+                {categoryOrder.map((category) => {
+                  const categoryItems = filteredMenuItems.filter(
+                    (item) => item.category === category,
+                  );
+
+                  if (categoryItems.length === 0) {
+                    return null;
+                  }
 
                   return (
-                    <button
-                      className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
-                        isSelected
-                          ? "border-[#234336] bg-[#234336] text-[#fffaf0]"
-                          : "border-[#d6bc82] bg-[#fffaf0] text-[#7a5a2f] hover:bg-[#efe4d0]"
-                      }`}
-                      key={filter.value}
-                      onClick={() => setSelectedSeason(filter.value)}
-                      type="button"
-                    >
-                      {filter.label}
-                    </button>
+                    <MenuCategorySection
+                      items={categoryItems}
+                      key={category}
+                      onAddToCart={addToCart}
+                      title={categoryLabels[category]}
+                    />
                   );
                 })}
               </div>
-            </section>
-
-            <MenuCategorySection
-              items={recommendedItems}
-              onAddToCart={addToCart}
-              title="本季推薦"
-            />
-
-            <div className="flex flex-col gap-8">
-              {categoryOrder.map((category) => {
-                const categoryItems = filteredMenuItems.filter(
-                  (item) => item.category === category,
-                );
-
-                if (categoryItems.length === 0) {
-                  return null;
-                }
-
-                return (
-                  <MenuCategorySection
-                    items={categoryItems}
-                    key={category}
-                    onAddToCart={addToCart}
-                    title={categoryLabels[category]}
-                  />
-                );
-              })}
-            </div>
-          </div>
-        )}
+            </>
+          )}
+        </div>
       </section>
     </main>
   );
