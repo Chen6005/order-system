@@ -86,8 +86,8 @@ const seasonalSectionContent: Record<
 
 export default function Home() {
   const [selectedSeason, setSelectedSeason] = useState<SeasonFilter>("all");
+  const [isMobileCartOpen, setIsMobileCartOpen] = useState(false);
   const menuSectionRef = useRef<HTMLDivElement | null>(null);
-  const cartSectionRef = useRef<HTMLDivElement | null>(null);
   const { isLoading: isMenuLoading, menuError, menuItems } = useMenuItems();
   const {
     addToCart,
@@ -115,10 +115,6 @@ export default function Home() {
   const handleSeasonEntryClick = (season: Season) => {
     setSelectedSeason(season);
     menuSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
-  const handleScrollToCart = () => {
-    cartSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
@@ -158,7 +154,7 @@ export default function Home() {
           </div>
         </section>
 
-        <div ref={cartSectionRef}>
+        <div className="hidden sm:block">
           <CartSummary
             cartItems={cartItems}
             checkoutSuccess={checkoutSuccess}
@@ -264,12 +260,55 @@ export default function Home() {
             </div>
             <button
               className="rounded-full bg-[#234336] px-5 py-3 text-sm font-semibold text-[#fffaf0] transition active:scale-[0.98]"
-              onClick={handleScrollToCart}
+              onClick={() => setIsMobileCartOpen(true)}
               type="button"
             >
               查看購物車
             </button>
           </div>
+        </div>
+      ) : null}
+
+      {cartItems.length > 0 ? (
+        <div
+          aria-hidden={!isMobileCartOpen}
+          className={`fixed inset-0 z-50 transition sm:hidden ${
+            isMobileCartOpen ? "pointer-events-auto" : "pointer-events-none"
+          }`}
+        >
+          <button
+            aria-label="關閉購物車"
+            className={`absolute inset-0 bg-[#2f251d]/45 transition-opacity ${
+              isMobileCartOpen ? "opacity-100" : "opacity-0"
+            }`}
+            onClick={() => setIsMobileCartOpen(false)}
+            type="button"
+          />
+          <section
+            className={`absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-2xl border border-[#d6bc82] bg-[#fffaf0] px-4 pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-4 shadow-2xl transition-transform duration-300 ${
+              isMobileCartOpen ? "translate-y-0" : "translate-y-full"
+            }`}
+          >
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="text-base font-semibold text-[#234336]">購物車</h2>
+              <button
+                className="rounded-full border border-[#d6bc82] px-3 py-2 text-sm font-medium text-[#7a5a2f]"
+                onClick={() => setIsMobileCartOpen(false)}
+                type="button"
+              >
+                關閉
+              </button>
+            </div>
+            <CartSummary
+              cartItems={cartItems}
+              checkoutSuccess={checkoutSuccess}
+              onCheckout={checkout}
+              onDecrease={decreaseQuantity}
+              onIncrease={increaseQuantity}
+              orderError={orderError}
+              total={cartTotal}
+            />
+          </section>
         </div>
       ) : null}
     </main>
