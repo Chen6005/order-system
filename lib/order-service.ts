@@ -43,6 +43,20 @@ export function subscribeToOrders(
   );
 }
 
+export function subscribeToOrder(
+  orderId: string,
+  callback: (order: Order | null) => void,
+  onError?: (error: Error) => void,
+) {
+  return onSnapshot(
+    doc(db, ordersCollection, orderId),
+    (snapshot) => {
+      callback(snapshot.exists() ? (snapshot.data() as Order) : null);
+    },
+    onError,
+  );
+}
+
 export async function updateOrderStatus(
   orderId: string,
   status: OrderStatus,

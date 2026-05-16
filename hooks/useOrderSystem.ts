@@ -2,16 +2,23 @@ import { useEffect, useState } from "react";
 
 import {
   createOrder,
+  subscribeToOrder,
   subscribeToOrders,
   updateOrderStatus as updateStoredOrderStatus,
 } from "@/lib/order-service";
 import type { CartItem, MenuItem, Order, OrderStatus } from "@/lib/types";
+
+const latestOrderStorageKey = "latestOrderId";
 
 export function useOrderSystem(isAdminAuthenticated: boolean) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
   const [orderError, setOrderError] = useState("");
+  const [latestOrderId, setLatestOrderId] = useState("");
+  const [latestOrder, setLatestOrder] = useState<Order | null>(null);
+  const [isTrackingOrder, setIsTrackingOrder] = useState(false);
+  const [orderTrackingError, setOrderTrackingError] = useState("");
 
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
   const cartTotal = cartItems.reduce(
@@ -31,6 +38,50 @@ export function useOrderSystem(isAdminAuthenticated: boolean) {
 
     return unsubscribe;
   }, [isAdminAuthenticated]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const storedOrderId = window.localStorage.getItem(latestOrderStorageKey);
+
+    if (storedOrderId) {
+      queueMicrotask(() => setLatestOrderId(storedOrderId));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!latestOrderId) {
+      queueMicrotask(() => {
+        setLatestOrder(null);
+        setIsTrackingOrder(false);
+        setOrderTrackingError("");
+      });
+      return;
+    }
+
+    queueMicrotask(() => {
+      setIsTrackingOrder(true);
+      setOrderTrackingError("");
+    });
+
+    const unsubscribe = subscribeToOrder(
+      latestOrderId,
+      (order) => {
+        setLatestOrder(order);
+        setIsTrackingOrder(false);
+        setOrderTrackingError(order ? "" : "找不到最近一筆訂單。");
+      },
+      () => {
+        setLatestOrder(null);
+        setIsTrackingOrder(false);
+        setOrderTrackingError("訂單追蹤讀取失敗，請稍後再試。");
+      },
+    );
+
+    return unsubscribe;
+  }, [latestOrderId]);
 
   function addToCart(menuItem: MenuItem) {
     setCheckoutSuccess(false);
@@ -102,6 +153,12 @@ export function useOrderSystem(isAdminAuthenticated: boolean) {
 
     try {
       await createOrder(newOrder);
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem(latestOrderStorageKey, newOrder.id);
+      }
+      setLatestOrderId(newOrder.id);
+      setLatestOrder(newOrder);
+      setOrderTrackingError("");
       setCheckoutSuccess(true);
       setCartItems([]);
       return true;
@@ -134,7 +191,11 @@ export function useOrderSystem(isAdminAuthenticated: boolean) {
     dismissCheckoutSuccess,
     decreaseQuantity,
     increaseQuantity,
+    isTrackingOrder,
+    latestOrder,
+    latestOrderId,
     orderError,
+    orderTrackingError,
     orders,
     updateOrderStatus,
   };
