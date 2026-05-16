@@ -32,6 +32,13 @@ const seasonalEntries: { label: string; season: Season; subtitle: string }[] = [
   { label: "冬季暖身", season: "winter", subtitle: "溫補暖胃" },
 ];
 
+const seasonalProductSectionTitle: Record<Exclude<Season, "allYear">, string> = {
+  spring: "春季商品",
+  summer: "夏季商品",
+  autumn: "秋季商品",
+  winter: "冬季商品",
+};
+
 const seasonalSectionContent: Record<
   Season,
   {
@@ -237,38 +244,60 @@ export default function Home() {
                 ) : null}
               </section>
 
-              <MenuCategorySection
-                cartItems={cartItems}
-                items={recommendedItems}
-                onAddToCart={addToCart}
-                onDecreaseQuantity={decreaseQuantity}
-                onIncreaseQuantity={increaseQuantity}
-                title="本季推薦"
-              />
+              {selectedSeason === "all" ? (
+                <>
+                  <MenuCategorySection
+                    cartItems={cartItems}
+                    items={recommendedItems}
+                    onAddToCart={addToCart}
+                    onDecreaseQuantity={decreaseQuantity}
+                    onIncreaseQuantity={increaseQuantity}
+                    title="本季推薦"
+                  />
 
-              <div className="flex flex-col gap-8">
-                {categoryOrder.map((category) => {
-                  const categoryItems = filteredMenuItems.filter(
-                    (item) => item.category === category,
-                  );
+                  <div className="flex flex-col gap-8">
+                    {categoryOrder.map((category) => {
+                      const categoryItems = filteredMenuItems.filter(
+                        (item) => item.category === category,
+                      );
 
-                  if (categoryItems.length === 0) {
-                    return null;
-                  }
+                      if (categoryItems.length === 0) {
+                        return null;
+                      }
 
-                  return (
-                    <MenuCategorySection
-                      cartItems={cartItems}
-                      items={categoryItems}
-                      key={category}
-                      onAddToCart={addToCart}
-                      onDecreaseQuantity={decreaseQuantity}
-                      onIncreaseQuantity={increaseQuantity}
-                      title={categoryLabels[category]}
-                    />
-                  );
-                })}
-              </div>
+                      return (
+                        <MenuCategorySection
+                          cartItems={cartItems}
+                          items={categoryItems}
+                          key={category}
+                          onAddToCart={addToCart}
+                          onDecreaseQuantity={decreaseQuantity}
+                          onIncreaseQuantity={increaseQuantity}
+                          title={categoryLabels[category]}
+                        />
+                      );
+                    })}
+                  </div>
+                </>
+              ) : selectedSeason === "allYear" ? (
+                <MenuCategorySection
+                  cartItems={cartItems}
+                  items={filteredMenuItems}
+                  onAddToCart={addToCart}
+                  onDecreaseQuantity={decreaseQuantity}
+                  onIncreaseQuantity={increaseQuantity}
+                  title="四季商品"
+                />
+              ) : (
+                <MenuCategorySection
+                  cartItems={cartItems}
+                  items={filteredMenuItems}
+                  onAddToCart={addToCart}
+                  onDecreaseQuantity={decreaseQuantity}
+                  onIncreaseQuantity={increaseQuantity}
+                  title={seasonalProductSectionTitle[selectedSeason]}
+                />
+              )}
             </>
           )}
         </div>
