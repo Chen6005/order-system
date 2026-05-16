@@ -103,6 +103,15 @@ const orderStatusLabels: Record<
   cancelled: "已取消",
 };
 
+const orderTimelineSteps = ["已收到訂單", "製作中", "可取餐", "已完成"] as const;
+
+const orderTimelineStepIndex: Record<"new" | "preparing" | "ready" | "completed", number> = {
+  new: 0,
+  preparing: 1,
+  ready: 2,
+  completed: 3,
+};
+
 export default function Home() {
   const [selectedSeason, setSelectedSeason] = useState<SeasonFilter>("all");
   const [isMobileCartOpen, setIsMobileCartOpen] = useState(false);
@@ -144,6 +153,11 @@ export default function Home() {
   const latestOrderCreatedAt = latestOrder
     ? new Date(latestOrder.createdAt).toLocaleString("zh-TW")
     : "";
+  const latestOrderTimelineStatus =
+    latestOrder &&
+    latestOrder.status !== "cancelled"
+      ? latestOrder.status
+      : null;
 
   useEffect(() => {
     if (cartCount > previousCartCountRef.current) {
@@ -230,6 +244,45 @@ export default function Home() {
               <p className="text-sm text-[#6c5b49]">暫時無法讀取訂單狀態</p>
             ) : latestOrder ? (
               <div className="flex flex-col gap-2 text-sm text-[#6c5b49]">
+                {!latestOrderTimelineStatus ? (
+                  <div className="mb-1 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
+                    已取消
+                  </div>
+                ) : (
+                  <div className="mb-2">
+                    <div className="mb-3 h-1.5 rounded-full bg-[#eadfca]">
+                      <div
+                        className="h-full rounded-full bg-[#234336] transition-all duration-300"
+                        style={{
+                          width: `${((orderTimelineStepIndex[latestOrderTimelineStatus] + 1) / orderTimelineSteps.length) * 100}%`,
+                        }}
+                      />
+                    </div>
+                    <div className="grid grid-cols-4 gap-2">
+                      {orderTimelineSteps.map((step, index) => {
+                        const isActive =
+                          index <= orderTimelineStepIndex[latestOrderTimelineStatus];
+
+                        return (
+                          <div className="flex flex-col items-center gap-1" key={step}>
+                            <span
+                              className={`h-2.5 w-2.5 rounded-full transition-colors ${
+                                isActive ? "bg-[#234336]" : "bg-[#d6bc82]"
+                              }`}
+                            />
+                            <span
+                              className={`text-center text-xs leading-4 ${
+                                isActive ? "font-semibold text-[#234336]" : "text-[#7a5a2f]"
+                              }`}
+                            >
+                              {step}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
                 <p>
                   訂單編號
                   <span className="ml-2 font-medium text-[#2f251d]">{latestOrder.id}</span>
